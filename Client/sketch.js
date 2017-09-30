@@ -25,7 +25,15 @@ function draw() {
     
 }
 
+function mousePressed() {
+    paint();
+}
+
 function mouseDragged() {
+    paint();
+}
+
+function paint() {
     this.mouseX = mouseX;
     this.mouseY = mouseY;
     
