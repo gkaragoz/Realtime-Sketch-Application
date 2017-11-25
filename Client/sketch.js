@@ -14,6 +14,7 @@ function draw() {
 	pencilY = mouseY;
 }
 
+//This is because user may want to click and draw without dragging. Ex: eyes
 function mousePressed() {
     paint();
 }
@@ -22,6 +23,7 @@ function mouseDragged() {
     paint();
 }
 
+//Real job is here. Painting with lerps
 function paint() {
   noStroke();
 
