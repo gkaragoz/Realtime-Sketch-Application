@@ -1,52 +1,28 @@
-var canvas;
-
-var pencilColor;
-var pencilSize;
-
-var mouseX;
-var mouseY;
-
-var sketchData = {
-    x: mouseX,
-    y: mouseY
-};
-
+var px, py;
 function setup() {
-    canvas = createCanvas(windowWidth, windowHeight);
-    canvas.position(0,0);
-    
-    background(51);
-    
-    pencilColor = 255;
-    pencilSize = 36;
+	createCanvas(windowWidth, windowHeight);
+	background(0);
+	px = mouseX;
+	py = mouseY;
+	colorMode(HSB);
 }
 
 function draw() {
-    
-}
+	noStroke();
 
-function mousePressed() {
-    paint();
-}
+	var d = dist(px, py, mouseX, mouseY);
 
-function mouseDragged() {
-    paint();
-}
+	for (var i = 0; i <= d; i += 10) {
 
-function paint() {
-    this.mouseX = mouseX;
-    this.mouseY = mouseY;
-    
-    noStroke();
-    fill(pencilColor);
-    ellipse(this.mouseX, this.mouseY, pencilSize, pencilSize);
-    
-    sketchData.x = this.mouseX;
-    sketchData.y = this.mouseY;
-    
-    console.log(sketchData);
-}
+		var nx = lerp(px, mouseX, i/d);
+		var ny = lerp(py, mouseY, i/d);
+		fill(255*i/d, 255, 255);
+		ellipse(nx, ny, 10, 10);
+	}
 
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
+	fill(255);
+	ellipse(mouseX, mouseY, 20, 20);
+
+	px = mouseX;
+	py = mouseY;
 }
