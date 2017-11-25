@@ -1,28 +1,36 @@
-var px, py;
+var pencilX, pencilY; //Stores pencil coordinates
+
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(0);
-	px = mouseX;
-	py = mouseY;
+	pencilX = mouseX;
+	pencilY = mouseY;
 	colorMode(HSB);
 }
 
 function draw() {
 	noStroke();
 
-	var d = dist(px, py, mouseX, mouseY);
+  //The distance between pencil and mouse coordinates
+	var distance = dist(pencilX, pencilY, mouseX, mouseY);
 
-	for (var i = 0; i <= d; i += 10) {
+	for (var ii=0; ii<=distance; ii+=10) {
+    //Lerp it between pencilX and mouseX
+		var nx = lerp(pencilX, mouseX, ii/distance);
+		var ny = lerp(pencilY, mouseY, ii/distance);
 
-		var nx = lerp(px, mouseX, i/d);
-		var ny = lerp(py, mouseY, i/d);
-		fill(255*i/d, 255, 255);
+    //Make it colorful, otherwise its blue
+		fill(255*ii/distance, 255, 255);
+
+    //Draw lerped dots
 		ellipse(nx, ny, 10, 10);
 	}
 
+  //Draw real impulsed dots by frameRate
 	fill(255);
 	ellipse(mouseX, mouseY, 20, 20);
 
-	px = mouseX;
-	py = mouseY;
+  //Always get mousePosition and set it to pencil coordinates
+	pencilX = mouseX;
+	pencilY = mouseY;
 }
