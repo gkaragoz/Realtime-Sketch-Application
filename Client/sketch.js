@@ -1,48 +1,24 @@
-var pencilX, pencilY; //Stores pencil coordinates
+var pencil;
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(0);
-	pencilX = mouseX;
-	pencilY = mouseY;
-	colorMode(HSB);
+  colorMode(HSB);
+
+  //Create a new Instance of pencil
+  pencil = new pencil(mouseX, mouseY);
 }
 
 function draw() {
   //Always get mousePosition and set it to pencil coordinates
-	pencilX = mouseX;
-	pencilY = mouseY;
+  pencil.display(mouseX, mouseY);
 }
 
 //This is because user may want to click and draw without dragging. Ex: eyes
 function mousePressed() {
-    paint();
+    pencil.paint(mouseX, mouseY);
 }
 
 function mouseDragged() {
-    paint();
-}
-
-//Real job is here. Painting with lerps
-function paint() {
-  noStroke();
-
-  //The distance between pencil and mouse coordinates
-  var distance = dist(pencilX, pencilY, mouseX, mouseY);
-
-  for (var ii=0; ii<=distance; ii+=10) {
-    //Lerp it between pencilX and mouseX
-    var nx = lerp(pencilX, mouseX, ii/distance);
-    var ny = lerp(pencilY, mouseY, ii/distance);
-
-    //Make it colorful, otherwise its blue
-    fill(255*ii/distance, 255, 255);
-
-    //Draw lerped dots
-    ellipse(nx, ny, 10, 10);
-  }
-
-  //Draw real impulsed dots by frameRate
-  fill(255);
-  ellipse(mouseX, mouseY, 20, 20);
+    pencil.paint(mouseX, mouseY);
 }
