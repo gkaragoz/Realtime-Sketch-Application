@@ -60,19 +60,7 @@ socket.on('newMessage',function (message) {
     
 });
 
-socket.on('newLocationMessage', function (message) {
-    var formattedTime = moment(message.createdAt).format('h:mm a');
-    var template = jQuery('#location-template').html();
-    var html     = Mustache.render(template, {
-        url : message.url,
-        from : message.from,
-        createdAt : formattedTime
-    });
-   
-    jQuery('#messages').append(html);
-    scrollToBottom();
-    
-});
+
 
 jQuery('#message-form').on('submit',function(e){
     e.preventDefault();
@@ -86,20 +74,3 @@ jQuery('#message-form').on('submit',function(e){
     );
 });
 
-var locationButton = jQuery('#send-location');
-locationButton.on('click',function(){
-    if(!navigator.geolocation){
-        return alert('Tarayıcınız lokasyon gönderimini desteklemiyor.');
-    }
-    locationButton.attr('disabled', 'disabled').text('Gönderiliyor ...');
-    
-    navigator.geolocation.getCurrentPosition( function (position){
-        locationButton.removeAttr('disabled').text('Konum Gönder');
-       socket.emit('createLocationMessage', {
-           latitude : position.coords.latitude,
-           longitude: position.coords.longitude
-       });
-    },function(){
-        alert('Konum alınamadı.');
-    })
-});

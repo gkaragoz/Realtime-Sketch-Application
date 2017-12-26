@@ -1,7 +1,8 @@
 var pencil;
 
 function setup() {
-	createCanvas(windowWidth, windowHeight);
+	var canvas = createCanvas(820, windowHeight);
+	canvas.position(285,0);
 	background(0);
   colorMode(HSB);
 
