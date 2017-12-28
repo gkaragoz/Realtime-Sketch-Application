@@ -1,10 +1,12 @@
 var pencil;
 
 function setup() {
-	var canvas = createCanvas(820, windowHeight);
-	canvas.position(285,0);
+	var canvas = createCanvas(885, windowHeight);
+	
 	background(0);
   colorMode(HSB);
+  canvas.parent('draw_main');
+  
 
   //Create a new Instance of pencil
   pencil = new pencil(mouseX, mouseY);
