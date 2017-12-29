@@ -1,6 +1,19 @@
-var Colors = {
-    "WHITE": color(255, 255, 255, 255),
-    "RED": color(255, 0, 0, 255),
-    "GREEN": color(0, 255, 0 ,255),
-    "BLUE": color(0, 0, 255, 255)
-  };
+class Color{
+  constructor(){
+    this.colors = {
+        WHITE:"#ffffff",
+        RED:"#ff0000",
+        GREEN:"#008000",
+        BLUE:"#0000ff"
+      };
+    
+    this.index = [];
+    
+    for(var value in this.colors) {
+      if(this.colors.hasOwnProperty(value)) {
+          var data = this.colors[value];
+          this.index.push(data);
+      }
+    }
+  }
+}
