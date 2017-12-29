@@ -1,6 +1,6 @@
 //Real job is here. Painting with lerps
-function pencil(x, y) {
-  this.color = Colors.WHITE;
+function pencil(x, y, colorObj) {
+  this.color = colorObj.colors.WHITE;
   this.x = x;
   this.y = y;
 
@@ -32,7 +32,7 @@ function pencil(x, y) {
     ellipse(mouseX, mouseY, 20, 20);
   }
 
-  this.setColor = function(color) {
+  this.setDrawColor = function(color) {
     this.color = color;
   }
 }
