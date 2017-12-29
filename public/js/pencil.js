@@ -20,12 +20,22 @@ function pencil(x, y, colorObj) {
       var nx = lerp(this.x, mouseX, ii/distance);
       var ny = lerp(this.y, mouseY, ii/distance);
 
-      //Make it colorful, otherwise its blue
-      fill(255*ii/distance, 255, 255);
+      if(DEBUG_MODE)
+      {
+        //Make it colorful, otherwise its blue
+        fill(255*ii/distance, 255, 255);
+      }
+      else
+      {
+        fill(255, 255, 255);
+      }
 
       //Draw lerped dots
       ellipse(nx, ny, 10, 10);
     }
+
+    if (!DEBUG_MODE)
+      return;
 
     //Draw real impulsed dots by frameRate
     fill(255);
