@@ -1,20 +1,23 @@
 var pencil;
+var colorButtonsCount = 4;
+var colorButtonsOffsetX = 25;
+var colorObj;
+
+const DRAW_MAIN_ID = 'draw_main';
 
 function setup() {
   	var canvas = createCanvas(885, windowHeight);
-	
+    colorObj = new Color();
+    
+
 	background(0);
   colorMode(HSB);
-  canvas.parent('draw_main');
-  
-  button = createButton('click me');
-  button.parent('draw_main');
-  button.id('btn_color_01');
-  button.position(50, windowHeight - 50);
-  button.mousePressed(buttonClick);
+  canvas.parent(DRAW_MAIN_ID);
+
+  createButtonUIs();
 
   //Create a new Instance of pencil
-  pencil = new pencil(mouseX, mouseY);
+  pencil = new pencil(mouseX, mouseY, colorObj);
 }
 
 function draw() {
@@ -31,6 +34,18 @@ function mouseDragged() {
     pencil.paint(mouseX, mouseY);
 }
 
-function buttonClick() {
-  console.log("Button clicked");
+function createButtonUIs(){
+  for (var i = 0; i < colorButtonsCount; i++) {
+    var location = {
+      posX : 50 + i * 25,
+      posY : windowHeight-50
+    };
+
+    var button = new Button(
+                          "",  
+                          this.colorObj.index[i], 
+                          DRAW_MAIN_ID, 
+                          location
+                        ); 
+  }
 }
