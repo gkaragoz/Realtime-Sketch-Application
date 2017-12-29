@@ -1,5 +1,6 @@
 //Real job is here. Painting with lerps
 function pencil(x, y) {
+  this.color = Colors.WHITE;
   this.x = x;
   this.y = y;
 
@@ -29,5 +30,9 @@ function pencil(x, y) {
     //Draw real impulsed dots by frameRate
     fill(255);
     ellipse(mouseX, mouseY, 20, 20);
+  }
+
+  this.setColor = function(color) {
+    this.color = color;
   }
 }
