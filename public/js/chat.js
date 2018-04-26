@@ -23,8 +23,6 @@ socket.on('connect',function () {
         if(err){
             alert(err);
             window.location.href='/';
-        }else{
-            console.log('hata yok');
         }
     });
 });
@@ -33,7 +31,7 @@ socket.on('disconnect',function () {
     console.log("Server ile bağlantı kesildi");
 });
 
-socket.on( 'updateUserList', function (users) {
+socket.on('updateUserList', function (users) {
     var ol = jQuery('<ol></ol>'); 
 
     users.forEach( function (user){
@@ -54,10 +52,7 @@ socket.on('newMessage',function (message) {
 
     jQuery('#messages').append(html);
     scrollToBottom();
-    
 });
-
-
 
 jQuery('#message-form').on('submit',function(e){
     e.preventDefault();
@@ -70,4 +65,3 @@ jQuery('#message-form').on('submit',function(e){
     }
     );
 });
-

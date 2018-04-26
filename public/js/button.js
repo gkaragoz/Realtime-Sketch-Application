@@ -18,6 +18,5 @@ class Button {
 
     onClick() {
         pencil.setDrawColor(this.color);
-        console.log("Pencil color set as: " + pencil.color);
     }
 }
