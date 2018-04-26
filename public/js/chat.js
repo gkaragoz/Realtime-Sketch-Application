@@ -1,5 +1,3 @@
-//@ts-check
-
 var socket = io();
 
 function scrollToBottom(){
@@ -17,7 +15,6 @@ function scrollToBottom(){
         messages.scrollTop(scrollHeight);
     }
 }
-
 
 socket.on('connect',function () {
     var params = jQuery.deparam(window.location.search);

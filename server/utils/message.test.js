@@ -1,6 +1,3 @@
-//@ts-check
-
-
 var expect = require('expect');
 var generateMessage = require("./message").generateMessage;
 var generateLocationMessage = require("./message").generateLocationMessage;

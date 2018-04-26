@@ -1,5 +1,4 @@
 const expect = require('expect');
-
 const {Users} = require('./users');
 
 describe('Users', function () {
@@ -22,7 +21,6 @@ describe('Users', function () {
         }];
     });
 
-
     it('Yeni kullanıcı eklemeli', function(){
         var users = new Users();
         var user = {
@@ -42,7 +40,6 @@ describe('Users', function () {
         expect(userList).toEqual(['Julie']);
     });
 
-
     it('Olan kullanıcıyı silmeli', () => {
         var userId = '1';
         var user = users.removeUser(userId);
@@ -58,7 +55,6 @@ describe('Users', function () {
         expect(user).toNotExist();
         expect(users.users.length).toBe(3);
       });
-    
 
     it ( 'Kullanıcıyı bulmalı', function () {
         var userId = '2' ;
@@ -75,6 +71,4 @@ describe('Users', function () {
         
         expect(user).toNotExist();
     });
-
-
 }) ;

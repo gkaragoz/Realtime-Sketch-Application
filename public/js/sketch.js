@@ -8,12 +8,11 @@ var DEBUG_MODE = false;
 const DRAW_MAIN_ID = 'draw_main';
 
 function setup() {
-  	var canvas = createCanvas(885, windowHeight);
-    colorObj = new Color();
+  var canvas = createCanvas(885, windowHeight);
+  colorObj = new Color();
     
-
 	background(0);
-  colorMode(HSB);
+  colorMode(RGB);
   canvas.parent(DRAW_MAIN_ID);
 
   createButtonUIs();

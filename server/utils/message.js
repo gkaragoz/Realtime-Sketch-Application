@@ -1,5 +1,3 @@
-//@ts-check
-
 var moment = require('moment');
 
 var generateMessage = function(from,text){
@@ -9,6 +7,5 @@ var generateMessage = function(from,text){
         createdAt: moment().valueOf()
     };
 };
-
 
 module.exports={generateMessage};

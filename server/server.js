@@ -1,8 +1,3 @@
-//@ts-check
-//@ts-check
-
-
-
 const path = require('path');
 const http = require('http');
 const express = require('express');
@@ -23,8 +18,6 @@ app.use(express.static(publicPath));
 io.on('connection', function (socket) {
     console.log("Yeni bir kullanıcı bağlandı");
 
-    
-
     socket.on('join', function(params, callback){
         if(!isRealString(params.name) || !isRealString(params.room)){
             callback('Kullanıcı adı ve oda adı alanı doldurulmalıdır.');
@@ -42,7 +35,6 @@ io.on('connection', function (socket) {
         socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin',  params.name + ' bağlandı.'));
         
         callback();
-
     });
 
     socket.on('createMessage',function (message,callback) {
@@ -55,8 +47,6 @@ io.on('connection', function (socket) {
        callback();
     });
 
-    
-
     socket.on('disconnect', function () {
         var user = users.removeUser(socket.id);
 
@@ -66,7 +56,6 @@ io.on('connection', function (socket) {
         }
     });
 });
-
 
 server.listen(port, function () {
     console.log('Server ' + port + ' numaralı portta çalışıyor');

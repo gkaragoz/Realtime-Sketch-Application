@@ -22,12 +22,13 @@ function pencil(x, y, colorObj) {
 
       if(DEBUG_MODE)
       {
-        //Make it colorful, otherwise its blue
-        fill(255*ii/distance, 255, 255);
+        //Make it colorful, otherwise its white
+        fill(255, 255*ii/distance, 255);
       }
       else
       {
-        fill(255, 255, 255);
+        //Get pencil current color.
+        fill(this.color.R, this.color.G, this.color.B);
       }
 
       //Draw lerped dots
