@@ -55,6 +55,16 @@ io.on('connection', function (socket) {
             io.to(user.room).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
         }
     });
+
+    //Draw
+    socket.on('draw', function(data, callback){
+        console.log(JSON.stringify(data));
+
+        var user = users.getUser(socket.id);
+
+        socket.broadcast.to(user.room).emit('draw', data);
+        callback(data);
+    });
 });
 
 server.listen(port, function () {
