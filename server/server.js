@@ -1,40 +1,47 @@
 const path = require('path');
 const http = require('http');
 const express = require('express');
-const  socketIO=require('socket.io');
+const socketIO=require('socket.io');
 
 const {generateMessage}=require('./utils/message');
 const {isRealString} = require('./utils/validation');
 const UM = require('./utils/userManager').userManager;
+const RM = require('./utils/roomManager').roomManager;
 const publicPath  = path.join(__dirname,"../public");
 const port  =   process.env.PORT ||3000 ;
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 var userManager = new UM();
+var roomManager = new RM();
 
 app.use(express.static(publicPath));
 
 io.on('connection', function (socket) {
-    console.log("Yeni bir kullanıcı bağlandı");
+    console.log(">>>>>Yeni bir ziyaretçi bulundu: " + socket.id);
 
     socket.on('join', function(params, callback){
-        if(!isRealString(params.name) || !isRealString(params.room)){
-            callback('Kullanıcı adı ve oda adı alanı doldurulmalıdır.');
+        if(!isRealString(params.name)){
+            console.log(">>>>>Kullanıcı bağlanamadı: " + socket.id);
+            callback('Kullanıcı adı alanı doldurulmalıdır.');
+        } else {
+            console.log(">>>>>Kullanıcı bağlantı kurdu: " + socket.id + " " + params.name);
+            console.log(">>>>>...Yeni bir kullanıcı oluşturuluyor.");
+            //Create a user.
+            userManager.createUser(socket.id, params.name, function(user) {
+                var room = roomManager.InitializeRoom(user);
+                socket.join(room.name);
+
+                io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
+                
+                //socket.emit from Admin text Welcome to the chat app
+                socket.emit('newMessage', generateMessage('Admin','Hoşgeldiniz'));
+                //socket.broadcast.emit from Admin text New user joined
+                socket.broadcast.to(room.name).emit('newMessage', generateMessage('Admin',  user.name + ' bağlandı.'));
+                
+                callback();
+            });
         }
-
-        socket.join(params.room);
-        userManager.removeUser(socket.id);
-        userManager.addUser(socket.id, params.name, params.room);
-
-        io.to(params.room).emit('updateUserList', userManager.getUserList(params.room));
-
-        //socket.emit from Admin text Welcome to the chat app
-        socket.emit('newMessage', generateMessage('Admin','Hoşgeldiniz'));
-        //socket.broadcast.emit from Admin text New user joined
-        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin',  params.name + ' bağlandı.'));
-        
-        callback();
     });
 
     socket.on('createMessage',function (message,callback) {
@@ -48,12 +55,16 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        var user = userManager.removeUser(socket.id);
+        console.log(">>>>>Kullanıcının bağlantısı kesildi!");
+        var user = userManager.getUser(socket.id);
+        var room = roomManager.getRoom(user);
 
-        if(user){
-            io.to(user.room).emit('updateUserList', userManager.getUserList(user.room));
-            io.to(user.room).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
-        }
+        
+        userManager.removeUser(user);
+        roomManager.removeUser(user, room);
+        
+        io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
+        io.to(room.name).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
     });
 
     //Draw

@@ -1,38 +1,37 @@
-  // addUser(id, name, room)
-  // removeUser(id)
-  // getUser(id)
-  // getUserList(room)
-  
-  class userManager {
+const userModel =require('./user').user;
+
+class userManager {
     constructor () {
       this.users = [];
     }
-    
-    addUser (id, name, room) {
-      var user = {id, name, room};
+
+    createUser(socketId, name, callback) {
+      var user = new userModel(socketId, name);
       this.users.push(user);
-      return user;
+      
+      callback(user);
     }
 
-    removeUser (id) {
-      var user = this.getUser(id);
-  
-      if (user) {
-        this.users = this.users.filter((user) => user.id !== id);
+    removeUser (user) {
+      console.log(">>>>>>...Kullanıcı siliniyor: " + user.name);
+      const index = this.users.indexOf(user);
+      this.users.splice(index, 1);
+      console.log(">>>>>>>Kullanıcı silindi: " + user.name);
+      console.log(">>>>>>>Mevcut kullanıcı listesi: " + JSON.stringify(this.users, '', 2));
+    }
+
+    getUser (socketId) {
+      console.log(">>>>>>Kullanıcı aranıyor: " + socketId);
+      for (let ii = 0; ii < this.users.length; ii++) {
+        const searching = this.users[ii];
+
+        if (searching.socketId === socketId) {
+          console.log(">>>>>>Aranan kullanıcı bulundu: " + JSON.stringify(searching, '', 2));
+          return searching;
+        }
       }
-  
-      return user;
-    }
-
-    getUser (id) {
-      return this.users.filter((user) => user.id === id)[0]
-    }
-
-    getUserList (room) {
-      var users = this.users.filter((user) => user.room === room);
-      var namesArray = users.map((user) => user.name);
-  
-      return namesArray;
+      console.log(">>>>>>Aranan kullanıcı bulunamadı: " + socketId);
+      return null;
     }
   }
   
