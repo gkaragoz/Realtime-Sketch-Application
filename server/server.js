@@ -48,9 +48,9 @@ io.on('connection', function (socket) {
         var user = userManager.getUser(socket.id);
         var room = roomManager.getRoom(user);
 
-        console.log(">>>>>Mesa isteği alındı.");
+        console.log(">>>>>Mesaj isteği alındı.");
         if (user && isRealString(message.text)) {
-            console.log(">>>>>Mesaj gönderildi. " + generateMessage(user.name, message.text));
+            console.log(">>>>>Mesaj gönderildi. " + JSON.stringify(generateMessage(user.name, message.text), '', 2));
             io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
         } else {
             console.log(">>>>>Mesaj gönderilemedi.");
