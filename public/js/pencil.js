@@ -22,19 +22,20 @@ function pencil(colorObj) {
         else
         {
           //Get pencil current color.
-          fill(this.color.R, this.color.G, this.color.B);
+          fill(data.color.R, data.color.G, data.color.B);
         }
   
         //Draw lerped dots
         ellipse(nx, ny, 10, 10);
       }
     } else {
-      fill(this.color.R, this.color.G, this.color.B);
+      fill(data.color.R, data.color.G, data.color.B);
       ellipse(data.x, data.y, 10, 10);
     }
   }
 
   this.setDrawColor = function(color) {
     this.color = color;
+    drawPackage.color = this.color;
   }
 }

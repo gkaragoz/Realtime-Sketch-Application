@@ -30,7 +30,8 @@ function setup() {
     beforeDrawX: mouseX,
     beforeDrawY: mouseY,
     x: 0,
-    y: 0
+    y: 0,
+    color: pencil.color
   };
 }
 
