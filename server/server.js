@@ -45,13 +45,18 @@ io.on('connection', function (socket) {
     });
 
     socket.on('createMessage',function (message,callback) {
-       var user = userManager.getUser(socket.id);
+        var user = userManager.getUser(socket.id);
+        var room = roomManager.getRoom(user);
 
-       if(user && isRealString(message.text)){
-            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
-       }
-       
-       callback();
+        console.log(">>>>>Mesa isteği alındı.");
+        if (user && isRealString(message.text)) {
+            console.log(">>>>>Mesaj gönderildi. " + generateMessage(user.name, message.text));
+            io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
+        } else {
+            console.log(">>>>>Mesaj gönderilemedi.");
+        }
+
+        callback();
     });
 
     socket.on('disconnect', function () {
@@ -59,7 +64,6 @@ io.on('connection', function (socket) {
         var user = userManager.getUser(socket.id);
         var room = roomManager.getRoom(user);
 
-        
         userManager.removeUser(user);
         roomManager.removeUser(user, room);
         
@@ -72,8 +76,9 @@ io.on('connection', function (socket) {
         console.log(JSON.stringify(data));
 
         var user = userManager.getUser(socket.id);
+        var room = roomManager.getRoom(user);
 
-        socket.broadcast.to(user.room).emit('draw', data);
+        socket.broadcast.to(room.name).emit('draw', data);
         callback(data);
     });
 });
