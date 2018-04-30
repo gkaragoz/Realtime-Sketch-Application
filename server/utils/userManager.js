@@ -3,7 +3,7 @@
   // getUser(id)
   // getUserList(room)
   
-  class Users {
+  class userManager {
     constructor () {
       this.users = [];
     }
@@ -36,4 +36,4 @@
     }
   }
   
-  module.exports = {Users};
+  module.exports = {userManager};
