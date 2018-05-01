@@ -61,7 +61,7 @@ const userManager =require('./userManager').userManager;
     removeUser(user, room) {
         console.log("İŞLEM:\t\t Kullanıcı odadan çıkartılıyor: " + user.name);
         room.removeUser(user);
-        console.log("SİSTEM:\t\t Kullanıcı odadan çıkartıldı: " + user.name);
+        console.log("BAŞARILI:\t\t Kullanıcı odadan çıkartıldı: " + user.name);
     }
     
   }

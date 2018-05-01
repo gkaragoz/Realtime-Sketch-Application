@@ -75,6 +75,7 @@ class room {
     /**** GAMEPLAY STUFF ****/
     startGame() {
         this.gameStarted = true;
+        console.log("*******************OYUN********************");
         console.log("ODA YÖNETİCİ:\t\t " + this.getUserCount() + " kullanıcı ile oyun başlatılıyor.");
         this.startRaund();
     }

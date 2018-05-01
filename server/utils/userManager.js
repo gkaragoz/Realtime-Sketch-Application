@@ -16,7 +16,7 @@ class userManager {
       console.log("İŞLEM:\t\t Kullanıcı siliniyor: " + user.name);
       const index = this.users.indexOf(user);
       this.users.splice(index, 1);
-      console.log("SİSTEM:\t\t Kullanıcı silindi: " + user.name);
+      console.log("BAŞARILI:\t\t Kullanıcı silindi: " + user.name);
     }
 
     getUser (socketId) {
@@ -25,11 +25,11 @@ class userManager {
         const searching = this.users[ii];
 
         if (searching.socketId === socketId) {
-          console.log("SİSTEM:\t\t Aranan kullanıcı bulundu: " + JSON.stringify(searching, '', 2));
+          console.log("BAŞARILI:\t\t Aranan kullanıcı bulundu: " + JSON.stringify(searching, '', 2));
           return searching;
         }
       }
-      console.log("SİSTEM:\t\t Aranan kullanıcı bulunamadı: " + socketId);
+      console.log("BAŞARISIZ:\t\t Aranan kullanıcı bulunamadı: " + socketId);
       return null;
     }
 
