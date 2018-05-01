@@ -66,6 +66,11 @@ io.on('connection', function (socket) {
         userManager.removeUser(user);
         roomManager.removeUser(user, room);
         
+        if (room.isReadyForGame() == false) {
+            console.log("UYARI:\t\t Oynanan oyun yeterli oyuncu olmadığından durdurulmak zorunda!");
+            room.stopRaund();
+        }
+
         io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
         io.to(room.name).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
 

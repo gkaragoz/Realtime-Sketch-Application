@@ -11,7 +11,7 @@ class room {
         this.raundInterval = null;
 
         this.gameStarted = false;
-        this.raundTime = 3;
+        this.raundTime = 5;
         this.currentTime = this.raundTime;
         this.maxRaund = 3;
         this.currentRaund = 0;
@@ -98,10 +98,10 @@ class room {
                 console.log("|||Bu odadaki oyun sona erdi: " + roomMain.name);
     
                 //Show room statistics.
-                // this.showRoomStatistics();
+                //this.showRoomStatistics();
 
-                console.log("ODA YÖNETİCİ:\t\t Yeni oyun 5 saniye sonra başlayacak...");
-                roomMain.waitALittle(5000, function() {
+                console.log("ODA YÖNETİCİ:\t\t Yeni oyun 10 saniye sonra başlayacak...");
+                roomMain.waitALittle(10000, function() {
                     roomMain.startGame();
                 });
 
