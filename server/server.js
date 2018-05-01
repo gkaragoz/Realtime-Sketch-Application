@@ -18,17 +18,15 @@ var roomManager = new RM();
 app.use(express.static(publicPath));
 
 io.on('connection', function (socket) {
-    console.log(">>>>>Yeni bir ziyaretçi bulundu: " + socket.id);
-
     socket.on('join', function(params, callback){
         if(!isRealString(params.name)){
-            console.log(">>>>>Kullanıcı bağlanamadı: " + socket.id);
+            console.log("UYARI:\t\t Başarısız giriş.");
             callback('Kullanıcı adı alanı doldurulmalıdır.');
         } else {
-            console.log(">>>>>Kullanıcı bağlantı kurdu: " + socket.id + " " + params.name);
-            console.log(">>>>>...Yeni bir kullanıcı oluşturuluyor.");
+            console.log("İŞLEM:\t\t Bir kullanıcı oluşturuluyor.");
             //Create a user.
             userManager.createUser(socket.id, params.name, function(user) {
+                console.log("BAŞARILI:\t\t Kullanıcı oluşumu tamamlandı.");
                 var room = roomManager.InitializeRoom(user);
                 socket.join(room.name);
 
@@ -48,19 +46,18 @@ io.on('connection', function (socket) {
         var user = userManager.getUser(socket.id);
         var room = roomManager.getRoom(user);
 
-        console.log(">>>>>Mesaj isteği alındı.");
         if (user && isRealString(message.text)) {
-            console.log(">>>>>Mesaj gönderildi. " + JSON.stringify(generateMessage(user.name, message.text), '', 2));
+            console.log("BAŞARILI:\t\t Mesaj gönderildi: " + JSON.stringify(generateMessage(user.name, message.text), '', 2) + "\n");
             io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
         } else {
-            console.log(">>>>>Mesaj gönderilemedi.");
+            console.log("BAŞARISIZ:\t\t Mesaj gönderilemedi.");
         }
 
         callback();
     });
 
     socket.on('disconnect', function () {
-        console.log(">>>>>Kullanıcının bağlantısı kesildi!");
+        console.log("UYARI:\t\t Kullanıcının bağlantısı kesildi!");
         var user = userManager.getUser(socket.id);
         var room = roomManager.getRoom(user);
 
@@ -72,9 +69,9 @@ io.on('connection', function (socket) {
 
         var totalUserCount = userManager.getUserCount();
         if (totalUserCount === 0) {
-            console.log("******SUNUCUDA KİMSE KALMADI!******");
+            console.log("SİSTEM:\t\t SUNUCUDA KİMSE KALMADI!******");
         } else {
-            console.log("******SUNUCUDA " + totalUserCount + " KİŞİ OYUN OYNUYOR!******");
+            console.log("SİSTEM:\t\t SUNUCUDA " + totalUserCount + " KİŞİ OYUN OYNUYOR!******");
         }
     });
 
@@ -91,5 +88,5 @@ io.on('connection', function (socket) {
 });
 
 server.listen(port, function () {
-    console.log('Server ' + port + ' numaralı portta çalışıyor');
+    console.log('SİSTEM:\t\t Server ' + port + ' numaralı portta çalışıyor');
 });

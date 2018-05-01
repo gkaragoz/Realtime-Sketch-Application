@@ -10,7 +10,7 @@ const userManager =require('./userManager').userManager;
         var room = new roomModel();
         this.rooms.push(room);
         
-        console.log(">>>>>>Bir oda oluşuturuldu: " + room.name);
+        console.log("BAŞARILI:\t\t Bir oda oluşuturuldu: " + room.name);
         return room;
     }
 
@@ -41,30 +41,27 @@ const userManager =require('./userManager').userManager;
         for (let ii = 0; ii < this.rooms.length; ii++) {
             const room = this.rooms[ii];
             if (room.isAvailableForNewUser()) {
-                console.log(">>>>>Uygun bir oda bulundu!");
-                console.log(">>>>>>Oda bilgileri: " + JSON.stringify(room.getStatus(), '', 2));
+                console.log("SİSTEM:\t\t Uygun bir oda bulundu!");
                 return room;
             }
         }
 
-        console.log(">>>>>>Uygun bir oda bulunamadı!");
+        console.log("SİSTEM:\t\t Uygun bir oda bulunamadı!");
         return this.createRoom();
     }
 
     InitializeRoom(user) {
         var room = this.getAvailableRoom();
         room.addUser(user);
-        console.log(">>>>>Bir kullanıcı odaya bağlandı: " + user.name);
-        console.log(">>>>>>Odanın son durumu: " + JSON.stringify(room.getStatus(), '', 2));
+        console.log("SİSTEM:\t\t Bir kullanıcı odaya bağlandı: " + user.name);
 
         return room;
     }
 
     removeUser(user, room) {
-        console.log(">>>>>>...Kullanıcı odadan çıkartılıyor: " + user.name);
+        console.log("İŞLEM:\t\t Kullanıcı odadan çıkartılıyor: " + user.name);
         room.removeUser(user);
-        console.log(">>>>>>>Kullanıcı odadan çıkartıldı: " + user.name);
-        console.log(">>>>>>>Güncellenen Odanın durumu: " + JSON.stringify(room.getStatus(), '', 2));
+        console.log("SİSTEM:\t\t Kullanıcı odadan çıkartıldı: " + user.name);
     }
     
   }
