@@ -27,8 +27,9 @@ io.on('connection', function (socket) {
             //Create a user.
             userManager.createUser(socket.id, params.name, function(user) {
                 console.log("BAŞARILI:\t\t Kullanıcı oluşumu tamamlandı.");
-                roomManager.InitializeRoom(user, function(room) {
+                roomManager.InitializeRoom(io, user, function(room) {
                     socket.join(room.name);
+                    
                     room.startGame();
 
                     io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
