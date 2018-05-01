@@ -5,40 +5,56 @@
     <meta charset="UTF-8">
     <title>Chat | ChatApp</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/styles.css" />
-    
-    <style> body {padding: 0; margin: 0;} </style>
+     <link rel="stylesheet" href="/css/styles.css" />
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body class="chat">
 
-   
-            <div class="col-sm-2 chat__sidebar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-xs-12">
                 <h3>Kullanıcılar</h3>
                 <div id="users"></div>
             </div>
-            <div class="col-sm-7 chat__main" id="draw_main">
-                
-            </div>
-            <div class="col-sm-3 chat__right">
+            <div class="col-sm-8 col-xs-12" id="draw_main"></div>
+            <div class="col-sm-2 col-xs-12">
                 <ol id="messages" class="chat__messages"></ol>
-                
-                        <div class="chat__footer">
-                        <form action="" id="message-form">
-                
-                
-                            <input type="text" name="message" placeholder="Mesaj" autofocus autocomplete="off">
-                            <button>Gönder</button>
-                
-                        </form>
-                       
-                    </div>
+                <div class="chat__footer form-group">
+                    <form action="" id="message-form">
+                        <input type="text" name="message" placeholder="Mesaj" autofocus autocomplete="off">
+                        <button>Gönder</button>
+                    </form>
+                </div>
             </div>
-      
-    
-    
-               
-    
+        </div>
+    </div>
+
+    <!-- <div class="col-sm-2 chat__sidebar">
+
+    </div>
+    <div class="col-sm-7 chat__main" id="draw_main">
+
+    </div>
+    <div class="col-sm-3 chat__right">
+
+
+        <div class="chat__footer">
+
+
+        </div>
+    </div>
+ -->
+
+
+
+
 
     <script id="message-template" type="text/template">
     <li class="message">
@@ -56,7 +72,7 @@
     </li>
 </script>
 
-   
+
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -67,10 +83,10 @@
     <script src="js/chat.js"></script>
     <script src="js/libs/p5.min.js"></script>
     <script src="js/libs/p5.dom.min.js"></script>
-    <script src="js/color.js"></script>  
+    <script src="js/color.js"></script>
     <script src="js/sketch.js"></script>
-    <script src="js/pencil.js"></script>   
-    <script src="js/button.js"></script>  
+    <script src="js/pencil.js"></script>
+    <script src="js/button.js"></script>
 
 </body>
 
