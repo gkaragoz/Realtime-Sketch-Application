@@ -42,7 +42,7 @@ const userManager =require('./userManager').userManager;
             const room = this.rooms[ii];
             if (room.isAvailableForNewUser()) {
                 console.log(">>>>>Uygun bir oda bulundu!");
-                console.log(">>>>>>Oda bilgileri: " + JSON.stringify(room, '', 2));
+                console.log(">>>>>>Oda bilgileri: " + JSON.stringify(room.getStatus(), '', 2));
                 return room;
             }
         }
@@ -55,7 +55,7 @@ const userManager =require('./userManager').userManager;
         var room = this.getAvailableRoom();
         room.addUser(user);
         console.log(">>>>>Bir kullanıcı odaya bağlandı: " + user.name);
-        console.log(">>>>>>Odanın son durumu: " + JSON.stringify(room, '', 2));
+        console.log(">>>>>>Odanın son durumu: " + JSON.stringify(room.getStatus(), '', 2));
 
         return room;
     }
@@ -64,7 +64,7 @@ const userManager =require('./userManager').userManager;
         console.log(">>>>>>...Kullanıcı odadan çıkartılıyor: " + user.name);
         room.removeUser(user);
         console.log(">>>>>>>Kullanıcı odadan çıkartıldı: " + user.name);
-        console.log(">>>>>>>Güncellenen Odanın durumu: " + JSON.stringify(room, '', 2));
+        console.log(">>>>>>>Güncellenen Odanın durumu: " + JSON.stringify(room.getStatus(), '', 2));
     }
     
   }
