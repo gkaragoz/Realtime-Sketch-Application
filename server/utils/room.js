@@ -14,7 +14,7 @@ class room {
         this.raundTime = 3;
         this.currentTime = this.raundTime;
         this.maxRaund = 3;
-        this.currentRaund = 1;
+        this.currentRaund = 0;
         this.whoIsArtist = null;
         this.rightAnswerCount = 0;
         this.rewards = [
@@ -74,10 +74,16 @@ class room {
 
     /**** GAMEPLAY STUFF ****/
     startGame() {
-        this.gameStarted = true;
-        console.log("*******************OYUN********************");
-        console.log("ODA YÖNETİCİ:\t\t " + this.getUserCount() + " kullanıcı ile oyun başlatılıyor.");
-        this.startRaund();
+        if (this.isReadyForGame()) {
+            this.gameStarted = true;
+            console.log("ODA YÖNETİCİ:\t\t " + this.getUserCount() + " kullanıcı ile oyun başlatılıyor.");
+            this.resetCurrentRaund();
+            this.prepareRaund();
+            this.nextRaund();
+        } else {
+            this.gameStarted = false;
+            console.log("ODA YÖNETİCİ:\t\t " + "Oyunun başlatılması için yeterli oyuncu yok!");
+        }
     }
 
     whileRaund(roomMain) {
@@ -87,30 +93,32 @@ class room {
             roomMain.stopRaund();
 
             if (roomMain.isGameFinished()) {
+                roomMain.gameStarted = false;
+
                 console.log("|||Bu odadaki oyun sona erdi: " + roomMain.name);
     
                 //Show room statistics.
                 // this.showRoomStatistics();
-    
-                // console.log("||| Room is closing..." + this.name);
-                // this.closeRoom(function() {
-                    // console.log("||| Room has been closed! " + this.name);
-                // });
-            } else {
+
+                console.log("ODA YÖNETİCİ:\t\t Yeni oyun 5 saniye sonra başlayacak...");
+                roomMain.waitALittle(5000, function() {
+                    roomMain.startGame();
+                });
+
+            } else if (roomMain.isReadyForGame()) {
                 console.log("ODA YÖNETİCİ:\t\t Yeni raund 5 saniye sonra başlayacak...");
                 console.log("ODA YÖNETİCİ:\t\t Yeni raund hazırlanıyor...");
-                roomMain.nextRaund();
+                roomMain.prepareRaund();
                 roomMain.waitALittle(5000, function() {
-                    roomMain.startRaund();
+                    roomMain.nextRaund();
                     console.log("ODA YÖNETİCİ:\t\t Yeni raund başladı: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
                 });
+            } else {
+                this.gameStarted = false;
+                console.log("*******************OYUN********************");
+                console.log("ODA YÖNETİCİ:\t\t " + "Oyunun başlatılması için yeterli oyuncu yok!");
             }
         }
-    }
-
-    startRaund() {
-        this.stopRaund();
-        this.raundInterval = setInterval(this.whileRaund, 1000, this);
     }
 
     stopRaund() {
@@ -121,14 +129,24 @@ class room {
         return (this.currentTime <= 0) ? true : false; 
     }
 
+    resetCurrentRaund() {
+        console.log("ODA YÖNETİCİ:\t\t Current Raund sıfırlandı. ");
+        this.currentRaund = 0;
+    }
+
     resetRaundTimer() {
         console.log("ODA YÖNETİCİ:\t\t Raund time sıfırlandı. " + this.currentTime + " -> " + this.raundTime);
         this.currentTime = this.raundTime;
     }
 
-    nextRaund(roomMain) {
+    prepareRaund() {
+        this.stopRaund();
         this.resetRaundTimer();
+    }
+
+    nextRaund(roomMain) {
         this.currentRaund++;
+        this.raundInterval = setInterval(this.whileRaund, 1000, this);
     }
 
     showRoomStatistics() {
@@ -139,17 +157,16 @@ class room {
 
     }
 
+    isReadyForGame() {
+        return (this.getUserCount() > 1) ? true : false;
+    }
+
     isGameStarted() {
         return this.gameStarted;
     }
 
     isGameFinished() {
         return (this.currentRaund >= this.maxRaund) ? true : false;
-    }
-
-    closeRoom(callback) {
-        //closeRoom;
-        callback();
     }
     
     waitALittle(milliseconds, callback) {

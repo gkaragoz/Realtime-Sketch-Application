@@ -25,7 +25,7 @@ class userManager {
         const searching = this.users[ii];
 
         if (searching.socketId === socketId) {
-          console.log("BAŞARILI:\t\t Aranan kullanıcı bulundu: " + JSON.stringify(searching, '', 2));
+          console.log("BAŞARILI:\t\t Aranan kullanıcı bulundu: " + searching.name);
           return searching;
         }
       }
