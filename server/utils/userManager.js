@@ -33,6 +33,10 @@ class userManager {
       console.log(">>>>>>Aranan kullanıcı bulunamadı: " + socketId);
       return null;
     }
+
+    getUserCount () {
+      return this.users.length;
+    }
   }
   
   module.exports = {userManager};

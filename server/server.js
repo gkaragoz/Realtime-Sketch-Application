@@ -69,6 +69,13 @@ io.on('connection', function (socket) {
         
         io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
         io.to(room.name).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
+
+        var totalUserCount = userManager.getUserCount();
+        if (totalUserCount === 0) {
+            console.log("******SUNUCUDA KİMSE KALMADI!******");
+        } else {
+            console.log("******SUNUCUDA " + totalUserCount + " KİŞİ OYUN OYNUYOR!******");
+        }
     });
 
     //Draw
