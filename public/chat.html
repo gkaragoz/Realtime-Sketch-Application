@@ -5,56 +5,44 @@
     <meta charset="UTF-8">
     <title>Chat | ChatApp</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
 
     <style>
         body {
-            padding: 0;
-            margin: 0;
+            padding: 0!important;
+            margin: 0!important;
         }
     </style>
 </head>
 
-<body class="chat">
+<body>
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-2 col-xs-12">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 chat__sidebar">
                 <h3>Kullanıcılar</h3>
                 <div id="users"></div>
             </div>
-            <div class="col-sm-8 col-xs-12" id="draw_main"></div>
-            <div class="col-sm-2 col-xs-12">
-                <ol id="messages" class="chat__messages"></ol>
-                <div class="chat__footer form-group">
-                    <form action="" id="message-form">
-                        <input type="text" name="message" placeholder="Mesaj" autofocus autocomplete="off">
-                        <button>Gönder</button>
-                    </form>
+            <div class="col-lg-7 col-md-6 col-sm-7 col-xs-12">
+                <div id="timer" class="mx-auto"><p>Time: 30 sn</p></div>
+                <div id="word" class="mx-auto"><p>_ _ _ _ _ _</p></div>
+                <div class="" id="draw_main">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-3 col-xs-12 chat__right">
+
+                <div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12 chat__footer">
+                    <ol id="messages" class="chat__messages"></ol>
+                    <div class="form-group">
+                        <form action="" id="message-form">
+                            <input type="text" name="message" placeholder="Mesaj" autofocus autocomplete="off">
+                            <button>Gönder</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- <div class="col-sm-2 chat__sidebar">
-
-    </div>
-    <div class="col-sm-7 chat__main" id="draw_main">
-
-    </div>
-    <div class="col-sm-3 chat__right">
-
-
-        <div class="chat__footer">
-
-
-        </div>
-    </div>
- -->
-
-
-
-
 
     <script id="message-template" type="text/template">
     <li class="message">
