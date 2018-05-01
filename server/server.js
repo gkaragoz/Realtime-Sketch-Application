@@ -27,17 +27,19 @@ io.on('connection', function (socket) {
             //Create a user.
             userManager.createUser(socket.id, params.name, function(user) {
                 console.log("BAŞARILI:\t\t Kullanıcı oluşumu tamamlandı.");
-                var room = roomManager.InitializeRoom(user);
-                socket.join(room.name);
+                roomManager.InitializeRoom(user, function(room) {
+                    socket.join(room.name);
+                    room.startGame();
 
-                io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
+                    io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
                 
-                //socket.emit from Admin text Welcome to the chat app
-                socket.emit('newMessage', generateMessage('Admin','Hoşgeldiniz'));
-                //socket.broadcast.emit from Admin text New user joined
-                socket.broadcast.to(room.name).emit('newMessage', generateMessage('Admin',  user.name + ' bağlandı.'));
-                
-                callback();
+                    //socket.emit from Admin text Welcome to the chat app
+                    socket.emit('newMessage', generateMessage('Admin','Hoşgeldiniz'));
+                    //socket.broadcast.emit from Admin text New user joined
+                    socket.broadcast.to(room.name).emit('newMessage', generateMessage('Admin',  user.name + ' bağlandı.'));
+                    
+                    callback();
+                });
             });
         }
     });

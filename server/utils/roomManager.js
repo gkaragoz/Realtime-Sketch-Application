@@ -50,12 +50,12 @@ const userManager =require('./userManager').userManager;
         return this.createRoom();
     }
 
-    InitializeRoom(user) {
+    InitializeRoom(user, callback) {
         var room = this.getAvailableRoom();
         room.addUser(user);
         console.log("SİSTEM:\t\t Bir kullanıcı odaya bağlandı: " + user.name);
 
-        return room;
+        callback(room);
     }
 
     removeUser(user, room) {

@@ -10,10 +10,11 @@ class room {
         //GAMEPLAY STUFF
         this.raundInterval = null;
 
-        this.isGameStarted = false;
+        this.gameStarted = false;
         this.raundTime = 3;
+        this.currentTime = this.raundTime;
         this.maxRaund = 3;
-        this.currentRaund = 0;
+        this.currentRaund = 1;
         this.whoIsArtist = null;
         this.rightAnswerCount = 0;
         this.rewards = [
@@ -26,8 +27,6 @@ class room {
             10,     //7
             5       //8
         ]
-
-        this.startGame();
     }
 
     getStatus() {
@@ -35,8 +34,9 @@ class room {
             name: this.name,
             capacity: this.capacity,
             users: this.users,
-            isGameStarted: this.isGameStarted,
+            gameStarted: this.gameStarted,
             raundTime: this.raundTime,
+            currentTime: this.currentTime,
             maxRaund: this.maxRaund,
             currentRaund: this.currentRaund,
             whoIsArtist: this.whoIsArtist,
@@ -74,17 +74,42 @@ class room {
 
     /**** GAMEPLAY STUFF ****/
     startGame() {
-        this.isGameStarted = true;
-        this.nextRaund();
-        this.raundInterval = setInterval(this.whileRaund, 1000, this);
+        this.gameStarted = true;
+        console.log("ODA YÖNETİCİ:\t\t " + this.getUserCount() + " kullanıcı ile oyun başlatılıyor.");
+        this.startRaund();
     }
 
     whileRaund(roomMain) {
-        console.log("||||||Raundun bitmesine: " + roomMain.raundTime--);
+        console.log("||||||Raundun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
         if (roomMain.isRaundFinished()) {
-            console.log("||||||Raund bitti!");
+            console.log("||||||Raund bitti: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
             roomMain.stopRaund();
+
+            if (roomMain.isGameFinished()) {
+                console.log("|||Bu odadaki oyun sona erdi: " + roomMain.name);
+    
+                //Show room statistics.
+                // this.showRoomStatistics();
+    
+                // console.log("||| Room is closing..." + this.name);
+                // this.closeRoom(function() {
+                    // console.log("||| Room has been closed! " + this.name);
+                // });
+            } else {
+                console.log("ODA YÖNETİCİ:\t\t Yeni raund 5 saniye sonra başlayacak...");
+                console.log("ODA YÖNETİCİ:\t\t Yeni raund hazırlanıyor...");
+                roomMain.nextRaund();
+                roomMain.waitALittle(5000, function() {
+                    roomMain.startRaund();
+                    console.log("ODA YÖNETİCİ:\t\t Yeni raund başladı: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
+                });
+            }
         }
+    }
+
+    startRaund() {
+        this.stopRaund();
+        this.raundInterval = setInterval(this.whileRaund, 1000, this);
     }
 
     stopRaund() {
@@ -92,23 +117,17 @@ class room {
     }
 
     isRaundFinished() {
-        return (this.raundTime <= 0) ? true : false; 
+        return (this.currentTime <= 0) ? true : false; 
     }
 
-    nextRaund() {
+    resetRaundTimer() {
+        console.log("ODA YÖNETİCİ:\t\t Raund time sıfırlandı. " + this.currentTime + " -> " + this.raundTime);
+        this.currentTime = this.raundTime;
+    }
+
+    nextRaund(roomMain) {
+        this.resetRaundTimer();
         this.currentRaund++;
-        if (this.isGameFinished()) {
-            this.stopRaund();
-            console.log("||| Game has been finished in this room: " + this.name);
-
-            //Show room statistics.
-            this.showRoomStatistics();
-
-            console.log("||| Room is closing..." + this.name);
-            this.closeRoom(function() {
-                console.log("||| Room has been closed! " + this.name);
-            });
-        }
     }
 
     showRoomStatistics() {
@@ -119,13 +138,21 @@ class room {
 
     }
 
+    isGameStarted() {
+        return this.gameStarted;
+    }
+
     isGameFinished() {
-        return (this.currentRaund > this.maxRaund) ? true : false;
+        return (this.currentRaund >= this.maxRaund) ? true : false;
     }
 
     closeRoom(callback) {
         //closeRoom;
         callback();
+    }
+    
+    waitALittle(milliseconds, callback) {
+        setTimeout(callback, milliseconds);
     }
 }
 
