@@ -1,8 +1,9 @@
 const uuidv1 = require('uuid/v1');
 
-
 class room {
-    constructor() {
+    constructor(io) {
+        this.io = io;
+
         //ROOM STRUCTURE        
         this.name = uuidv1(); // ⇨ 'f64f2940-fae4-11e7-8c5f-ef356f279131'
         this.capacity = 3;
@@ -11,9 +12,10 @@ class room {
         //GAMEPLAY STUFF
         this.raundInterval = null;
 
-        this.isGameStarted = false;
-        this.raundTime = 3;
-        this.maxRaund = 3;
+        this.gameStarted = false;
+        this.raundTime = 2;
+        this.currentTime = this.raundTime;
+        this.maxRaund = 2;
         this.currentRaund = 0;
         this.whoIsArtist = null;
         this.rightAnswerCount = 0;
@@ -27,8 +29,6 @@ class room {
             10,     //7
             5       //8
         ]
-
-        this.startGame();
     }
 
     getStatus() {
@@ -36,8 +36,9 @@ class room {
             name: this.name,
             capacity: this.capacity,
             users: this.users,
-            isGameStarted: this.isGameStarted,
+            gameStarted: this.gameStarted,
             raundTime: this.raundTime,
+            currentTime: this.currentTime,
             maxRaund: this.maxRaund,
             currentRaund: this.currentRaund,
             whoIsArtist: this.whoIsArtist,
@@ -75,41 +76,103 @@ class room {
 
     /**** GAMEPLAY STUFF ****/
     startGame() {
-        this.isGameStarted = true;
-        this.nextRaund();
-        this.raundInterval = setInterval(this.whileRaund, 1000, this);
+        if (this.isReadyForGame()) {
+            this.gameStarted = true;
+            console.log("ODA YÖNETİCİ:\t\t " + this.getUserCount() + " kullanıcı ile oyun başlatılıyor.");
+            this.resetCurrentRaund();
+            this.prepareRaund();
+            this.nextRaund();
+
+            console.log("~~~Kullanıcılara startGame bildiriliyor.");
+            this.io.to(this.name).emit('startGame');
+        } else {
+            this.endGame();
+            console.log("ODA YÖNETİCİ:\t\t " + "Oyunun başlatılması için yeterli oyuncu yok!");
+        }
+    }
+
+    endGame() {
+        this.gameStarted = false;
+        console.log("|||Bu odadaki oyun sona erdi: " + this.name);
+
+        console.log("~~~Kullanıcılara endGame bildiriliyor.");
+        this.io.to(this.name).emit('endGame');
     }
 
     whileRaund(roomMain) {
-        console.log("||||||Raundun bitmesine: " + roomMain.raundTime--);
+        console.log("||||||Raundun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
+        console.log("~~~Kullanıcılara currentTime bildiriliyor.");
+        roomMain.io.to(roomMain.name).emit('currentTime', roomMain.currentTime);
+
         if (roomMain.isRaundFinished()) {
-            console.log("||||||Raund bitti!");
+            console.log("||||||Raund bitti: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
             roomMain.stopRaund();
+
+            if (roomMain.isGameFinished()) {
+                roomMain.endGame();
+
+                //Show room statistics.
+                //this.showRoomStatistics();
+
+                console.log("ODA YÖNETİCİ:\t\t Yeni oyun 10 saniye sonra başlayacak...");
+                roomMain.waitALittle(10000, function() {
+                    roomMain.startGame();
+                });
+
+            } else if (roomMain.isReadyForGame()) {
+                console.log("ODA YÖNETİCİ:\t\t Yeni raund 5 saniye sonra başlayacak...");
+                console.log("ODA YÖNETİCİ:\t\t Yeni raund hazırlanıyor...");
+                roomMain.prepareRaund();
+                roomMain.waitALittle(5000, function() {
+                    roomMain.nextRaund();
+                    console.log("ODA YÖNETİCİ:\t\t Yeni raund başladı: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
+                });
+            } else {
+                roomMain.endGame();
+                console.log("ODA YÖNETİCİ:\t\t " + "Oyunun başlatılması için yeterli oyuncu yok!");
+            }
         }
     }
 
     stopRaund() {
         clearInterval(this.raundInterval);
+
+        console.log("~~~Kullanıcılara stopRaund bildiriliyor.");
+        this.io.to(this.name).emit('stopRaund');
     }
 
     isRaundFinished() {
-        return (this.raundTime <= 0) ? true : false; 
+        return (this.currentTime <= 0) ? true : false; 
     }
 
-    nextRaund() {
+    resetCurrentRaund() {
+        console.log("ODA YÖNETİCİ:\t\t Current Raund sıfırlandı. ");
+        this.currentRaund = 0;
+        
+        console.log("~~~Kullanıcılara resetCurrentRound bildiriliyor.");
+        this.io.to(this.name).emit('resetCurrentRound', this.currentRaund);
+    }
+
+    resetRaundTimer() {
+        console.log("ODA YÖNETİCİ:\t\t Raund time sıfırlandı. " + this.currentTime + " -> " + this.raundTime);
+        this.currentTime = this.raundTime;
+
+        console.log("~~~Kullanıcılara resetRaundTimer bildiriliyor.");
+        this.io.to(this.name).emit('resetRaundTimer', this.currentTime);
+    }
+
+    prepareRaund() {
+        this.stopRaund();
+        this.resetRaundTimer();
+    }
+
+    nextRaund(roomMain) {
         this.currentRaund++;
-        if (this.isGameFinished()) {
-            this.stopRaund();
-            console.log("||| Game has been finished in this room: " + this.name);
 
-            //Show room statistics.
-            this.showRoomStatistics();
+        console.log("~~~Kullanıcılara nextRaund bildiriliyor.");
+        this.io.to(this.name).emit('nextRaund', this.currentRaund);
 
-            console.log("||| Room is closing..." + this.name);
-            this.closeRoom(function() {
-                console.log("||| Room has been closed! " + this.name);
-            });
-        }
+        this.raundInterval = setInterval(this.whileRaund, 1000, this);
     }
 
     showRoomStatistics() {
@@ -120,13 +183,20 @@ class room {
 
     }
 
-    isGameFinished() {
-        return (this.currentRaund > this.maxRaund) ? true : false;
+    isReadyForGame() {
+        return (this.getUserCount() > 1) ? true : false;
     }
 
-    closeRoom(callback) {
-        //closeRoom;
-        callback();
+    isGameStarted() {
+        return this.gameStarted;
+    }
+
+    isGameFinished() {
+        return (this.currentRaund >= this.maxRaund) ? true : false;
+    }
+    
+    waitALittle(milliseconds, callback) {
+        setTimeout(callback, milliseconds);
     }
 }
 

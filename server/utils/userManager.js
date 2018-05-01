@@ -13,24 +13,23 @@ class userManager {
     }
 
     removeUser (user) {
-      console.log(">>>>>>...Kullanıcı siliniyor: " + user.name);
+      console.log("İŞLEM:\t\t Kullanıcı siliniyor: " + user.name);
       const index = this.users.indexOf(user);
       this.users.splice(index, 1);
-      console.log(">>>>>>>Kullanıcı silindi: " + user.name);
-      console.log(">>>>>>>Mevcut kullanıcı listesi: " + JSON.stringify(this.users, '', 2));
+      console.log("BAŞARILI:\t\t Kullanıcı silindi: " + user.name);
     }
 
     getUser (socketId) {
-      console.log(">>>>>>Kullanıcı aranıyor: " + socketId);
+      console.log("İŞLEM:\t\t Kullanıcı aranıyor: " + socketId);
       for (let ii = 0; ii < this.users.length; ii++) {
         const searching = this.users[ii];
 
         if (searching.socketId === socketId) {
-          console.log(">>>>>>Aranan kullanıcı bulundu: " + JSON.stringify(searching, '', 2));
+          console.log("BAŞARILI:\t\t Aranan kullanıcı bulundu: " + searching.name);
           return searching;
         }
       }
-      console.log(">>>>>>Aranan kullanıcı bulunamadı: " + socketId);
+      console.log("BAŞARISIZ:\t\t Aranan kullanıcı bulunamadı: " + socketId);
       return null;
     }
 
