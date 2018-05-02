@@ -15,7 +15,7 @@ class room {
 
         this.gameStarted = false;
         this.currentTour = 0;
-        this.tourTime = 3;
+        this.tourTime = 10;
         this.currentTime = this.tourTime;
         this.maxRaund = 3;
         this.currentRaund = 0;
@@ -228,6 +228,16 @@ class room {
         }
     }
 
+    isGuessCorrect(user, word) {
+        if (word === this.currentQuestion && user.isArtist === false) {
+            console.log("***" + user.name + " adlı kullanıcı kelimeyi doğru tahmin etti: " + word);
+            //puan ver.
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**** EVENT STUFF ****/
     announceTheGame(){
         var data = {
@@ -250,7 +260,7 @@ class room {
 
     getARandomWord() {
         var randomIndex = Math.floor((Math.random() * this.words.length));
-        var word = this.words[randomIndex].value;
+        var word = this.words[randomIndex];
 
         if (word === undefined)
             return "sakarya";

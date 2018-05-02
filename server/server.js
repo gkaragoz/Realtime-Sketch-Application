@@ -22,7 +22,14 @@ mongoose.connect('mongodb://localhost/words_db');
 db = mongoose.connection;
 
 fillWords(function(data) {
-    this.words = data;
+    var temp = [];
+
+    for (let ii = 0; ii < data.length; ii++) {
+        const aWord = data[ii].value;
+        temp.push(aWord.toUpperCase());
+    }
+
+    this.words = temp;
     console.log("VERİTABANI:\t\t " + this.words.length + " adet kelime başarıyla alındı");
 });
 
@@ -61,8 +68,13 @@ io.on('connection', function (socket) {
         var room = roomManager.getRoom(user);
 
         if (user && isRealString(message.text)) {
+            if (room.isGuessCorrect(user, message.text.toUpperCase())) {
+                message.text = user.name.toUpperCase() + " ARANAN KELİMEYİ BİLDİ!";
+                io.to(room.name).emit('newMessage', generateMessage("Admin", message.text));
+            } else {
+                io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
+            }
             console.log("BAŞARILI:\t\t Mesaj gönderildi: " + JSON.stringify(generateMessage(user.name, message.text), '', 2) + "\n");
-            io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
         } else {
             console.log("BAŞARISIZ:\t\t Mesaj gönderilemedi.");
         }
