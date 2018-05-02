@@ -10,7 +10,7 @@ const DRAW_MAIN_ID = 'draw_main';
 const TOOLBOX_ID = "toolbox_div";
 
 function setup() {
-  var canvas = createCanvas(885, windowHeight);
+  var canvas = createCanvas(600, 700);
   colorObj = new Color();
 
   background(255);
@@ -23,6 +23,7 @@ function setup() {
   checkbox.parent(TOOLBOX_ID);
   checkbox.position(150, windowHeight - 50);
   checkbox.changed(onChangedCheckbox);
+  checkbox.addClass('noselect');
 
   //Create a new Instance of pencil
   pencil = new pencil(colorObj);

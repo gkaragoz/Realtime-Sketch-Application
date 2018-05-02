@@ -16,7 +16,7 @@ function pencil(colorObj) {
         if(DEBUG_MODE)
         {
           //Make it colorful, otherwise its white
-          fill(255, 255*ii/distance, 255);
+          fill(0, 255*ii/distance, 0);
           ellipse(data.x, data.y, 20, 20);
         }
         else

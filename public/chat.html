@@ -19,18 +19,32 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 chat__sidebar">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 chat__sidebar noselect">
                 <h3>Kullanıcılar</h3>
                 <div id="users"></div>
             </div>
-            <div class="col-lg-7 col-md-6 col-sm-7 col-xs-12" disabled>
-                <div id="timer" class="mx-auto"><p>Süre: 30 sn</p></div>
-                <div id="word" class="mx-auto"><p>_ _ _ _ _ _</p></div>
-                <div class="" id="draw_main">
+            <div class="col-lg-7 col-md-6 col-sm-7 col-xs-12">
+                <div class="row">
+                    <div id="timer" class="noselect">
+                        <p>Süre: 30 sn</p>
+                    </div>
+                    <div id="word" class="noselect">
+                        <p>_ _ _ _ _ _</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="" id="draw_main">
+
+                    </div>
+                </div>
+                <div class="row">
                     <div class="" id="toolbox_div"></div>
                 </div>
+
+
+
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-3 col-xs-12 chat__right">
+            <div class="col-lg-3 col-md-4 col-sm-3 col-xs-12 chat__right noselect">
 
                 <div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12 chat__footer">
                     <ol id="messages" class="chat__messages"></ol>
