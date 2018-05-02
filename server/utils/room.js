@@ -1,8 +1,9 @@
 const uuidv1 = require('uuid/v1');
 
 class room {
-    constructor(io) {
+    constructor(io, word) {
         this.io = io;
+        this.word = word;
 
         //ROOM STRUCTURE        
         this.name = uuidv1(); // ⇨ 'f64f2940-fae4-11e7-8c5f-ef356f279131'
@@ -74,7 +75,7 @@ class room {
     prepareGame() {
         this.currentRaund = 0;
 
-        //Open db request.
+        this.getARandomWord(this.word);
 
         //Set currentQuestion.
     }
@@ -206,6 +207,26 @@ class room {
             console.log("ODA KRİTİK DURUM: Oyun çıkısında artist düzeltildi.");
             this.currentArtist = this.users.length - 1;
         }
+    }
+
+    /**** DB STUFF ****/
+    getWordsCount(callback) {
+        this.word.getWordsCount(function(count) {
+            callback(count);
+        });
+    }
+
+    getARandomWord(word) {
+        this.getWordsCount(function(count) {
+            for (let ii = 0; ii < 1000; ii++) {
+                var randomIndex = Math.floor((Math.random() * count + 1));
+                
+                word.getAWord(randomIndex, function(data) {
+                    console.log("word: " + data);
+                });
+            }
+        });
+        
     }
 }
 

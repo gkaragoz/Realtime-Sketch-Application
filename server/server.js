@@ -2,6 +2,8 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketIO=require('socket.io');
+const mongoose = require('mongoose');
+const word = require('./model/word');
 
 const {generateMessage}=require('./utils/message');
 const {isRealString} = require('./utils/validation');
@@ -15,6 +17,9 @@ var io = socketIO(server);
 var userManager = new UM();
 var roomManager = new RM();
 
+mongoose.connect('mongodb://localhost/words_db');
+db = mongoose.connection;
+
 app.use(express.static(publicPath));
 
 io.on('connection', function (socket) {
@@ -27,7 +32,7 @@ io.on('connection', function (socket) {
             //Create a user.
             userManager.createUser(socket.id, params.name, function(user) {
                 console.log("BAŞARILI:\t\t Kullanıcı oluşumu tamamlandı.");
-                roomManager.InitializeRoom(io, user, function(room) {
+                roomManager.InitializeRoom(io, word, user, function(room) {
                     socket.join(room.name);
                     
                     room.startGame();
