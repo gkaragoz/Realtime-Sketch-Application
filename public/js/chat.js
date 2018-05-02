@@ -74,7 +74,6 @@ function updateQuestionText(question, isArtist) {
         for (let ii = 0; ii < question.length; ii++) {
             value += "_ ";
         }
-        console.log("VALUE?: " + value);
         $('#questionText').html(value);
     }
 }

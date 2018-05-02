@@ -101,7 +101,7 @@
 
  .chat__footer, .chat__sidebar li {
      background: #e6eaee;
-     padding: 10px
+     padding: 5px
  }
 
  .chat__sidebar h3 {
@@ -133,7 +133,7 @@
      flex-grow: 1;
      overflow-y: scroll;
      -webkit-overflow-scrolling: touch;
-     padding: 10px
+     padding: 5px
  }
 
  .chat__footer {
@@ -157,12 +157,11 @@
  }
 
  .message {
-     padding: 10px
+     padding: 5px, 5px, 0px, 5px; 
  }
 
  .message__title {
      display: flex;
-     margin-bottom: 5px
  }
 
  .message__title h4 {
@@ -201,24 +200,6 @@
      margin-right: 0;
  }
 
- .message {
-     padding: 10px
- }
-
- .message__title {
-     display: flex;
-     margin-bottom: 5px
- }
-
- .message__title h4 {
-     font-weight: 600;
-     margin-right: 10px
- }
-
- .message__title span {
-     color: #999
- }
-
  canvas {
      width: 100%!important;
  }
@@ -237,6 +218,7 @@
 
  #word {
      color: darkslategrey;
+     padding-left: 8px;
  }
 
  #word p {
@@ -247,6 +229,8 @@
 
  #timer {
     color: darkslategrey;
+    padding-left: 8px;
+    padding-top: 3px;
  }
 
  #timer p{
