@@ -32,16 +32,7 @@ socket.on('disconnect', function () {
 });
 
 socket.on('updateUserList', function (users) {
-    var ol = jQuery('<ol></ol>');
-   
-    
-    
-    users.forEach(function (user) {
-        ol.append(jQuery('<li></li>').text(user.name + "     (150)  "));
-        $('<b>TEST</b>').appendTo($('ol li:last'));
-    });
-
-    jQuery('#users').html(ol);
+    updateUsers(users);
 });
 
 socket.on('newMessage', function (message) {
@@ -56,6 +47,20 @@ socket.on('newMessage', function (message) {
     jQuery('#messages').append(html);
     scrollToBottom();
 });
+
+function updateUsers(users) {
+    var ol = jQuery('<ol></ol>');
+   
+    users.forEach(function (user) {
+        if (user.isArtist) {
+            ol.append(jQuery('<li></li>').text(user.name + "\t" + user.score + "\tÇİZER"));
+        } else {
+            ol.append(jQuery('<li></li>').text(user.name + "\t" + user.score));
+        }
+    });
+
+    jQuery('#users').html(ol);
+}
 
 jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();

@@ -15,9 +15,9 @@ class room {
 
         this.gameStarted = false;
         this.currentTour = 0;
-        this.tourTime = 2;
+        this.tourTime = 30;
         this.currentTime = this.tourTime;
-        this.maxRaund = 2;
+        this.maxRaund = 3;
         this.currentRaund = 0;
         this.currentQuestion = "saü";
         this.maxArtist = 0;
@@ -105,6 +105,7 @@ class room {
         //Emit the open word to artist.
 
         //Emit the secret word to everyone.
+        this.announceTheGame();
     }
 
 
@@ -223,18 +224,23 @@ class room {
     }
 
     /**** EVENT STUFF ****/
-    sendWordToArtist() {
-        console.log("~~~Artiste kelime yollanıyor.");
-        this.io.to(this.users[this.currentArtist].id).emit('artistInfo', this.word);
-    }
-
     announceTheGame(){
         var data = {
             users: this.users,
-            word : this.word.length,
+            word : this.currentQuestion,
         };
         console.log("~~~Kullanıcılara startGame bildiriliyor.");
         this.io.to(this.name).emit('onGameStarted', data);
+    }
+    
+    onTourStarted() {
+        console.log("~~~Kullanıcılara tourStared bildiriliyor.");
+        this.io.to(this.name).emit('onTourStarted', data);
+    }
+
+    onTourFinished() {
+        console.log("~~~Kullanıcılara tourFinished bildiriliyor.");
+        this.io.to(this.name).emit('onTourFinished');
     }
 
     getARandomWord() {

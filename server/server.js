@@ -107,14 +107,6 @@ io.on('connection', function (socket) {
         socket.broadcast.to(room.name).emit('draw', data);
         callback(data);
     });
-
-    socket.on('artistInfoEcho', function() {
-        console.log("SİSTEM:\t\t Artist bilgisini aldı.");
-
-        var user = userManager.getUser(socket.id);
-        var room = roomManager.getRoom(user);
-        room.announceTheGame();
-    });
 });
 
 /**** DB STUFF ****/

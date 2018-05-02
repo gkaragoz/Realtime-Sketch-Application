@@ -89,13 +89,20 @@ function onChangedCheckbox() {
   console.log("DEBUG MODE: " + DEBUG_MODE);
 }
 
+function setArtist(value) {
+  isArtist = value;
+}
 
 socket.on('onGameStarted', function(data){
-  console.log("Game Started");
-  console.log(data);
-});
+  var users = data.users;
+  
+  for (let ii = 0; ii < users.length; ii++) {
+    const user = users[ii];
+    
+    if (socket.id === user.socketId) {
+      setArtist(user.isArtist);
+    }
+  }
 
-socket.on('artistInfo', function(word){
-  console.log("Kelimeyi aldım beyler rahat: " + word);
-  socket.emit('artistInfoEcho');
+  updateUsers(users);
 });
