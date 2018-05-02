@@ -73,6 +73,8 @@ io.on('connection', function (socket) {
             room.endGame();
         }
 
+        room.controlItself();
+
         io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
         io.to(room.name).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
 

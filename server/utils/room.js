@@ -6,13 +6,14 @@ class room {
 
         //ROOM STRUCTURE        
         this.name = uuidv1(); // ⇨ 'f64f2940-fae4-11e7-8c5f-ef356f279131'
-        this.capacity = 3;
+        this.capacity = 5;
         this.users = [];
 
         //GAMEPLAY STUFF
         this.gameInterval = null;
 
         this.gameStarted = false;
+        this.currentTour = 0;
         this.tourTime = 10;
         this.currentTime = this.tourTime;
         this.maxRaund = 2;
@@ -85,6 +86,7 @@ class room {
 
     nextRaund() {
         console.log("|||||Sonraki raunda geçiliyor...");
+        this.currentTour = 0;
         ++this.currentRaund;
     }
 
@@ -130,14 +132,14 @@ class room {
                     roomMain.waitALittle(5000, function () {
                         roomMain.startGame();
                     });
+                    return;
                 } else {
                     roomMain.prepareRaund();
                 }
-            } else {
-                roomMain.prepareTour();
-                roomMain.startTour();
-            }
-        }
+            } 
+            roomMain.prepareTour();
+            roomMain.startTour();
+        } 
     }
 
     decreaseTimer(roomMain) {
@@ -161,7 +163,7 @@ class room {
     }
 
     startTour() {
-        console.log("|||||Tur başlatılıyor...");
+        console.log("|||||" + ++this.currentTour + ".Tur başlatılıyor...");
         console.log("|||||Yeni tur başladı: " + "Artist:" + this.users[this.currentArtist].name + " | Kelime: " + this.currentQuestion);
         this.gameInterval = setInterval(this.whileGame, 1000, this);
     }
@@ -197,6 +199,13 @@ class room {
 
     setNextArtist() {
         this.currentArtist--;
+    }
+
+    controlItself() {
+        if (this.currentArtist > this.users.length-1) {
+            console.log("ODA KRİTİK DURUM: Oyun çıkısında artist düzeltildi.");
+            this.currentArtist = this.users.length - 1;
+        }
     }
 }
 
