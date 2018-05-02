@@ -67,17 +67,14 @@ class room {
             this.gameStarted = true;
             this.prepareGame();
             this.prepareRaund();
-            this.prepareTour();
-            this.startTour();
+            this.prepareTour(this, function(roomMain) {
+                roomMain.startTour();
+            });
         }
     }
 
     prepareGame() {
         this.currentRaund = 0;
-
-        this.getARandomWord(this.word);
-
-        //Set currentQuestion.
     }
 
     prepareRaund() {
@@ -91,9 +88,16 @@ class room {
         ++this.currentRaund;
     }
 
-    prepareTour() {
+    prepareTour(roomMain, callback) {
         console.log("|||||Tur hazırlanıyor...");
         this.currentTime = this.tourTime;
+
+        this.getARandomWord(this.word, function(word) {
+            //Set currentQuestion.
+            roomMain.currentQuestion = word;
+            console.log("|||||Bu tur için kullanılacak kelime belirlendi: " + roomMain.currentQuestion);
+            callback(roomMain);
+        });
 
         //Set artist.
 
@@ -138,8 +142,9 @@ class room {
                     roomMain.prepareRaund();
                 }
             } 
-            roomMain.prepareTour();
-            roomMain.startTour();
+            roomMain.prepareTour(roomMain, function() {
+                roomMain.startTour();
+            });
         } 
     }
 
@@ -216,15 +221,13 @@ class room {
         });
     }
 
-    getARandomWord(word) {
+    getARandomWord(word, callback) {
         this.getWordsCount(function(count) {
-            for (let ii = 0; ii < 1000; ii++) {
-                var randomIndex = Math.floor((Math.random() * count + 1));
-                
-                word.getAWord(randomIndex, function(data) {
-                    console.log("word: " + data);
-                });
-            }
+            var randomIndex = Math.floor((Math.random() * count + 1));
+            
+            word.getAWord(randomIndex, function(data) {
+                callback(data.value);
+            });
         });
         
     }
