@@ -70,6 +70,7 @@ io.on('connection', function (socket) {
         if (room.isReadyForGame() == false) {
             console.log("UYARI:\t\t Oynanan oyun yeterli oyuncu olmadığından durdurulmak zorunda!");
             room.stopRaund();
+            room.endGame();
         }
 
         io.to(room.name).emit('updateUserList', roomManager.getUsers(room));

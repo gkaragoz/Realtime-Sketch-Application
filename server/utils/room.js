@@ -10,10 +10,10 @@ class room {
         this.users = [];
 
         //GAMEPLAY STUFF
-        this.raundInterval = null;
+        this.gameInterval = null;
 
         this.gameStarted = false;
-        this.raundTime = 2;
+        this.raundTime = 8;
         this.currentTime = this.raundTime;
         this.maxRaund = 2;
         this.currentRaund = 0;
@@ -76,115 +76,104 @@ class room {
 
     /**** GAMEPLAY STUFF ****/
     startGame() {
-        if (this.isReadyForGame()) {
+        if(this.isReadyForGame()) {
+            console.log("|||||Yeni oyun başladı.");
             this.gameStarted = true;
-            console.log("ODA YÖNETİCİ:\t\t " + this.getUserCount() + " kullanıcı ile oyun başlatılıyor.");
-            this.resetCurrentRaund();
+            this.prepareGame();
             this.prepareRaund();
-            this.nextRaund();
-
-            console.log("~~~Kullanıcılara startGame bildiriliyor.");
-            this.io.to(this.name).emit('startGame');
-        } else {
-            this.endGame();
-            console.log("ODA YÖNETİCİ:\t\t " + "Oyunun başlatılması için yeterli oyuncu yok!");
+            this.startRaund();
         }
     }
 
-    endGame() {
-        this.gameStarted = false;
-        console.log("|||Bu odadaki oyun sona erdi: " + this.name);
-
-        console.log("~~~Kullanıcılara endGame bildiriliyor.");
-        this.io.to(this.name).emit('endGame');
+    prepareGame() {
+        this.currentRaund = 0;
     }
 
-    whileRaund(roomMain) {
-        console.log("||||||Raundun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
-        console.log("~~~Kullanıcılara currentTime bildiriliyor.");
-        roomMain.io.to(roomMain.name).emit('currentTime', roomMain.currentTime);
+    prepareRaund() {
+        console.log("|||||Yeni raund hazırlanıyor...");
+        this.currentTime = this.raundTime;
+
+        //Find who is artist?
+
+        //Emit the permission to artist.
+
+        //Get random word from DB
+        
+        //Emit the open word to artist.
+        
+        //Emit the secret word to everyone.
+    }
+
+    endGame() {
+        console.log("|||||Oyun bitti.");
+        this.gameStarted = false;
+    }
+
+    whileGame(roomMain) {
+        roomMain.decreaseTimer(roomMain);
 
         if (roomMain.isRaundFinished()) {
-            console.log("||||||Raund bitti: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
             roomMain.stopRaund();
 
             if (roomMain.isGameFinished()) {
                 roomMain.endGame();
-
-                //Show room statistics.
-                //this.showRoomStatistics();
-
-                console.log("ODA YÖNETİCİ:\t\t Yeni oyun 10 saniye sonra başlayacak...");
+                
+                console.log("|||||Yeni oyun 10 saniye sonra başlayacak...");
                 roomMain.waitALittle(10000, function() {
                     roomMain.startGame();
                 });
-
-            } else if (roomMain.isReadyForGame()) {
-                console.log("ODA YÖNETİCİ:\t\t Yeni raund 5 saniye sonra başlayacak...");
-                console.log("ODA YÖNETİCİ:\t\t Yeni raund hazırlanıyor...");
+            } else {
                 roomMain.prepareRaund();
+
+                console.log("|||||Yeni raund 5 saniye sonra başlayacak...");
                 roomMain.waitALittle(5000, function() {
                     roomMain.nextRaund();
-                    console.log("ODA YÖNETİCİ:\t\t Yeni raund başladı: " + roomMain.currentRaund + "/" + roomMain.maxRaund);
                 });
-            } else {
-                roomMain.endGame();
-                console.log("ODA YÖNETİCİ:\t\t " + "Oyunun başlatılması için yeterli oyuncu yok!");
             }
         }
     }
 
-    stopRaund() {
-        clearInterval(this.raundInterval);
+    decreaseTimer(roomMain) {
+        console.log("||||||Raundun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
+        // console.log("~~~Kullanıcılara currentTime bildiriliyor.");
+        // roomMain.io.to(roomMain.name).emit('currentTime', roomMain.currentTime);
+    }
 
-        console.log("~~~Kullanıcılara stopRaund bildiriliyor.");
-        this.io.to(this.name).emit('stopRaund');
+    stopRaund() {
+        console.log("|||||Raund bitti: " + this.currentRaund + "/" + this.maxRaund);
+        clearInterval(this.gameInterval);
     }
 
     isRaundFinished() {
         return (this.currentTime <= 0) ? true : false; 
     }
-
-    resetCurrentRaund() {
-        console.log("ODA YÖNETİCİ:\t\t Current Raund sıfırlandı. ");
-        this.currentRaund = 0;
-        
-        console.log("~~~Kullanıcılara resetCurrentRound bildiriliyor.");
-        this.io.to(this.name).emit('resetCurrentRound', this.currentRaund);
+    
+    startRaund() {
+        console.log("|||||Raund başlatılıyor...");
+        this.nextRaund();
     }
-
-    resetRaundTimer() {
-        console.log("ODA YÖNETİCİ:\t\t Raund time sıfırlandı. " + this.currentTime + " -> " + this.raundTime);
-        this.currentTime = this.raundTime;
-
-        console.log("~~~Kullanıcılara resetRaundTimer bildiriliyor.");
-        this.io.to(this.name).emit('resetRaundTimer', this.currentTime);
-    }
-
-    prepareRaund() {
-        this.stopRaund();
-        this.resetRaundTimer();
-    }
-
-    nextRaund(roomMain) {
+    
+    nextRaund() {
         this.currentRaund++;
-
-        console.log("~~~Kullanıcılara nextRaund bildiriliyor.");
-        this.io.to(this.name).emit('nextRaund', this.currentRaund);
-
-        this.raundInterval = setInterval(this.whileRaund, 1000, this);
-    }
-
-    showRoomStatistics() {
-
-    }
-
-    calculateRoomStatistics() {
-
+        console.log("|||||Yeni raund başladı: " + this.currentRaund + "/" + this.maxRaund);
+        this.gameInterval = setInterval(this.whileGame, 1000, this);
     }
 
     isReadyForGame() {
-        return (this.getUserCount() > 1) ? true : false;
+        if (this.getUserCount() <= 1) {
+            console.log("|||||ODA DURUM:\t\t Yeni oyun için yeterli oyuncu yok.");
+            return false;
+        }
+        else if (this.isGameStarted()) {
+            console.log("|||||ODA DURUM:\t\t Yeni oyuna hazır değil: oyun zaten oynanıyor.");
+            return false;
+        } else if (this.getUserCount() > 1 && this.isGameStarted() == false) {
+            console.log("|||||ODA DURUM:\t\t Oda yeni bir oyuna hazır.");
+            return true;
+        } else {
+            console.log("|||||ODA DURUM:\t\t Bir şeyler ters gidiyor.");
+            return false;
+        }
     }
 
     isGameStarted() {
