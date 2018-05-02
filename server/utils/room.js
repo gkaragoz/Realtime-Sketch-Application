@@ -15,7 +15,7 @@ class room {
 
         this.gameStarted = false;
         this.currentTour = 0;
-        this.tourTime = 10;
+        this.tourTime = 30;
         this.currentTime = this.tourTime;
         this.maxRaund = 3;
         this.currentRaund = 0;
