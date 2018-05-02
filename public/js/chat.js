@@ -66,8 +66,17 @@ function updateRoomInfo(currentRaund, maxRaund, tourTime) {
     $('#roomInfo').html("Raund: " + currentRaund + "/" + maxRaund + " | " + tourTime + " saniye");
 }
 
-function updateQuestionText() {
-
+function updateQuestionText(question, isArtist) {
+    if (isArtist) {
+        $('#questionText').html(question);
+    } else {
+        var value = "";
+        for (let ii = 0; ii < question.length; ii++) {
+            value += "_ ";
+        }
+        console.log("VALUE?: " + value);
+        $('#questionText').html(value);
+    }
 }
 
 jQuery('#message-form').on('submit', function (e) {

@@ -147,7 +147,6 @@ class room {
 
     decreaseTimer(roomMain) {
         console.log("||||||Turun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
-        console.log("~~~Kullanıcılara currentTime bildiriliyor.");
 
         var data = {
             currentRaund: roomMain.currentRaund, 
