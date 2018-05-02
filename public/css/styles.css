@@ -244,7 +244,7 @@
  }
 
  #word {
-     color: white;
+     color: darkslategrey;
      z-index: 10;
  }
 
@@ -256,7 +256,7 @@
  }
 
  #timer {
-    color: white;
+    color: darkslategrey;
     z-index: 20;
  }
 

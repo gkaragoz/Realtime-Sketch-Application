@@ -99,8 +99,6 @@ io.on('connection', function (socket) {
 
     //Draw
     socket.on('draw', function(data, callback){
-        console.log(JSON.stringify(data.color));
-
         var user = userManager.getUser(socket.id);
         var room = roomManager.getRoom(user);
 
