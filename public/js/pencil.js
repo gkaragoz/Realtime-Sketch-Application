@@ -1,6 +1,6 @@
 //Real job is here. Painting with lerps
 function pencil(colorObj) {
-  this.color = colorObj.colors.WHITE;
+  this.color = colorObj.colors.BLACK;
 
   this.paint = function(data) {
     noStroke();

@@ -267,3 +267,7 @@
      font-size: 15px;
 
  }
+
+ #draw_main #toolbox_div{
+     display: none;
+ }

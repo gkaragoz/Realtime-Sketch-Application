@@ -1,10 +1,10 @@
 class Color{
   constructor(){
     this.colors = {
-        WHITE: {
-          R: 255,
-          G: 255,
-          B: 255 
+        BLACK: {
+          R: 0,
+          G: 0,
+          B: 0 
         },
         RED: {
           R: 255,

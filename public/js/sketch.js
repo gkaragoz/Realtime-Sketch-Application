@@ -7,19 +7,20 @@ var isArtist = false;
 var DEBUG_MODE = false;
 
 const DRAW_MAIN_ID = 'draw_main';
+const TOOLBOX_ID = "toolbox_div";
 
 function setup() {
   var canvas = createCanvas(885, windowHeight);
   colorObj = new Color();
 
-  background(0);
+  background(255);
   colorMode(RGB);
   canvas.parent(DRAW_MAIN_ID);
 
   createButtonUIs();
 
   var checkbox = createCheckbox('Debug Mode', false);
-  checkbox.parent(DRAW_MAIN_ID);
+  checkbox.parent(TOOLBOX_ID);
   checkbox.position(150, windowHeight - 50);
   checkbox.changed(onChangedCheckbox);
 
@@ -78,7 +79,7 @@ function createButtonUIs() {
     var button = new Button(
       "",
       this.colorObj.index[i],
-      DRAW_MAIN_ID,
+      TOOLBOX_ID,
       location
     );
   }
@@ -91,6 +92,12 @@ function onChangedCheckbox() {
 
 function setArtist(value) {
   isArtist = value;
+
+  if (isArtist) {
+    $('#toolbox_div').show();
+  } else {
+    $('#toolbox_div').hide();
+  }
 }
 
 socket.on('onGameStarted', function(data){
