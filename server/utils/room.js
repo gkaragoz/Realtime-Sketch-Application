@@ -15,7 +15,7 @@ class room {
 
         this.gameStarted = false;
         this.currentTour = 0;
-        this.tourTime = 30;
+        this.tourTime = 3;
         this.currentTime = this.tourTime;
         this.maxRaund = 3;
         this.currentRaund = 0;
@@ -73,7 +73,7 @@ class room {
     }
 
     prepareGame() {
-        this.currentRaund = 0;
+        this.currentRaund = 1;
     }
 
     prepareRaund() {
@@ -147,8 +147,14 @@ class room {
 
     decreaseTimer(roomMain) {
         console.log("||||||Turun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
-        // console.log("~~~Kullanıcılara currentTime bildiriliyor.");
-        // roomMain.io.to(roomMain.name).emit('currentTime', roomMain.currentTime);
+        console.log("~~~Kullanıcılara currentTime bildiriliyor.");
+
+        var data = {
+            currentRaund: roomMain.currentRaund, 
+            maxRaund: roomMain.maxRaund, 
+            tourTime: roomMain.currentTime
+        }
+        roomMain.io.to(roomMain.name).emit('roomInfo', data);
     }
 
     stopTour() {
@@ -194,7 +200,7 @@ class room {
     }
 
     isGameFinished() {
-        return (this.currentRaund >= this.maxRaund) ? true : false;
+        return (this.currentRaund > this.maxRaund) ? true : false;
     }
 
     waitALittle(milliseconds, callback) {
@@ -245,7 +251,12 @@ class room {
 
     getARandomWord() {
         var randomIndex = Math.floor((Math.random() * this.words.length));
-        return this.words[randomIndex].value;
+        var word = this.words[randomIndex].value;
+
+        if (word === undefined)
+            return "sakarya";
+        else 
+            return word;
     }
 }
 

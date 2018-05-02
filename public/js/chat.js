@@ -62,6 +62,14 @@ function updateUsers(users) {
     jQuery('#users').html(ol);
 }
 
+function updateRoomInfo(currentRaund, maxRaund, tourTime) {
+    $('#roomInfo').html("Raund: " + currentRaund + "/" + maxRaund + " | " + tourTime + " saniye");
+}
+
+function updateQuestionText() {
+
+}
+
 jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();
 
