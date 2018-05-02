@@ -3,7 +3,7 @@ var colorButtonsCount = 4;
 var colorButtonsOffsetX = 25;
 var colorObj;
 var drawPackage;
-
+var isArtist = false;
 var DEBUG_MODE = false;
 
 const DRAW_MAIN_ID = 'draw_main';
@@ -47,21 +47,25 @@ socket.on('draw', function (data) {
 
 //This is because user may want to click and draw without dragging. Ex: eyes
 function mousePressed() {
-  drawPackage.x = mouseX;
-  drawPackage.y = mouseY;
-
-  socket.emit('draw', drawPackage, function (response) {
-    pencil.paint(response);
-  });
+  if(isArtist){
+    drawPackage.x = mouseX;
+    drawPackage.y = mouseY;
+  
+    socket.emit('draw', drawPackage, function (response) {
+      pencil.paint(response);
+    });
+  }
 }
 
 function mouseDragged() {
-  drawPackage.x = mouseX;
-  drawPackage.y = mouseY;
-  
-  socket.emit('draw', drawPackage, function (response) {
-    pencil.paint(response);
-  });
+  if(isArtist){
+    drawPackage.x = mouseX;
+    drawPackage.y = mouseY;
+    
+    socket.emit('draw', drawPackage, function (response) {
+      pencil.paint(response);
+    });
+  }
 }
 
 function createButtonUIs() {
@@ -84,3 +88,14 @@ function onChangedCheckbox() {
   DEBUG_MODE = !DEBUG_MODE;
   console.log("DEBUG MODE: " + DEBUG_MODE);
 }
+
+
+socket.on('onGameStarted', function(data){
+  console.log("Game Started");
+  console.log(data);
+});
+
+socket.on('artistInfo', function(word){
+  console.log("Kelimeyi aldım beyler rahat: " + word);
+  socket.emit('artistInfoEcho');
+});

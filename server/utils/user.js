@@ -33,6 +33,10 @@
     getIsArtist() {
       return this.isArtist;
     }
+
+    setArtist(value){
+      this.isArtist = value;
+    }
   }
   
   module.exports = {user};

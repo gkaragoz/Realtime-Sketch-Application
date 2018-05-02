@@ -1,9 +1,9 @@
 const uuidv1 = require('uuid/v1');
 
 class room {
-    constructor(io, word) {
+    constructor(io, words) {
         this.io = io;
-        this.word = word;
+        this.words = words;
 
         //ROOM STRUCTURE        
         this.name = uuidv1(); // ⇨ 'f64f2940-fae4-11e7-8c5f-ef356f279131'
@@ -15,7 +15,7 @@ class room {
 
         this.gameStarted = false;
         this.currentTour = 0;
-        this.tourTime = 10;
+        this.tourTime = 2;
         this.currentTime = this.tourTime;
         this.maxRaund = 2;
         this.currentRaund = 0;
@@ -67,9 +67,8 @@ class room {
             this.gameStarted = true;
             this.prepareGame();
             this.prepareRaund();
-            this.prepareTour(this, function(roomMain) {
-                roomMain.startTour();
-            });
+            this.prepareTour();
+            this.startTour();
         }
     }
 
@@ -80,26 +79,24 @@ class room {
     prepareRaund() {
         console.log("|||||Raund hazırlanıyor...");
         this.currentArtist = this.users.length - 1;
+        this.onOffEveryArtist();
     }
 
     nextRaund() {
-        console.log("|||||Sonraki raunda geçiliyor...");
+        console.log("|||||~~~Sonraki raunda geçiliyor...|||||");
         this.currentTour = 0;
         ++this.currentRaund;
     }
 
-    prepareTour(roomMain, callback) {
+    prepareTour() {
         console.log("|||||Tur hazırlanıyor...");
         this.currentTime = this.tourTime;
 
-        this.getARandomWord(this.word, function(word) {
-            //Set currentQuestion.
-            roomMain.currentQuestion = word;
-            console.log("|||||Bu tur için kullanılacak kelime belirlendi: " + roomMain.currentQuestion);
-            callback(roomMain);
-        });
+        this.currentQuestion = this.getARandomWord();
+        console.log("|||||Bu tur için kullanılacak kelime belirlendi: " + this.currentQuestion);
 
         //Set artist.
+        this.onOffEveryArtist();
 
         //Emit the permission to artist.
 
@@ -141,11 +138,10 @@ class room {
                 } else {
                     roomMain.prepareRaund();
                 }
-            } 
-            roomMain.prepareTour(roomMain, function() {
-                roomMain.startTour();
-            });
-        } 
+            }
+            roomMain.prepareTour();
+            roomMain.startTour();
+        }
     }
 
     decreaseTimer(roomMain) {
@@ -171,6 +167,7 @@ class room {
     startTour() {
         console.log("|||||" + ++this.currentTour + ".Tur başlatılıyor...");
         console.log("|||||Yeni tur başladı: " + "Artist:" + this.users[this.currentArtist].name + " | Kelime: " + this.currentQuestion);
+
         this.gameInterval = setInterval(this.whileGame, 1000, this);
     }
 
@@ -207,29 +204,42 @@ class room {
         this.currentArtist--;
     }
 
+    onOffEveryArtist() {
+        for (let ii = 0; ii < this.users.length; ii++) {
+            const aUser = this.users[ii];
+            if (aUser.socketId === this.users[this.currentArtist].socketId) {
+                aUser.setArtist(true);
+            } else {
+                aUser.setArtist(false);
+            }
+        }
+    }
+
     controlItself() {
-        if (this.currentArtist > this.users.length-1) {
+        if (this.currentArtist > this.users.length - 1) {
             console.log("ODA KRİTİK DURUM: Oyun çıkısında artist düzeltildi.");
             this.currentArtist = this.users.length - 1;
         }
     }
 
-    /**** DB STUFF ****/
-    getWordsCount(callback) {
-        this.word.getWordsCount(function(count) {
-            callback(count);
-        });
+    /**** EVENT STUFF ****/
+    sendWordToArtist() {
+        console.log("~~~Artiste kelime yollanıyor.");
+        this.io.to(this.users[this.currentArtist].id).emit('artistInfo', this.word);
     }
 
-    getARandomWord(word, callback) {
-        this.getWordsCount(function(count) {
-            var randomIndex = Math.floor((Math.random() * count + 1));
-            
-            word.getAWord(randomIndex, function(data) {
-                callback(data.value);
-            });
-        });
-        
+    announceTheGame(){
+        var data = {
+            users: this.users,
+            word : this.word.length,
+        };
+        console.log("~~~Kullanıcılara startGame bildiriliyor.");
+        this.io.to(this.name).emit('onGameStarted', data);
+    }
+
+    getARandomWord() {
+        var randomIndex = Math.floor((Math.random() * this.words.length));
+        return this.words[randomIndex].value;
     }
 }
 

@@ -16,9 +16,15 @@ var server = http.createServer(app);
 var io = socketIO(server);
 var userManager = new UM();
 var roomManager = new RM();
+var words = [];
 
 mongoose.connect('mongodb://localhost/words_db');
 db = mongoose.connection;
+
+fillWords(function(data) {
+    this.words = data;
+    console.log("VERİTABANI:\t\t " + this.words.length + " adet kelime başarıyla alındı");
+});
 
 app.use(express.static(publicPath));
 
@@ -32,7 +38,7 @@ io.on('connection', function (socket) {
             //Create a user.
             userManager.createUser(socket.id, params.name, function(user) {
                 console.log("BAŞARILI:\t\t Kullanıcı oluşumu tamamlandı.");
-                roomManager.InitializeRoom(io, word, user, function(room) {
+                roomManager.InitializeRoom(io, this.words, user, function(room) {
                     socket.join(room.name);
                     
                     room.startGame();
@@ -101,7 +107,22 @@ io.on('connection', function (socket) {
         socket.broadcast.to(room.name).emit('draw', data);
         callback(data);
     });
+
+    socket.on('artistInfoEcho', function() {
+        console.log("SİSTEM:\t\t Artist bilgisini aldı.");
+
+        var user = userManager.getUser(socket.id);
+        var room = roomManager.getRoom(user);
+        room.announceTheGame();
+    });
 });
+
+/**** DB STUFF ****/
+function fillWords(callback) {
+    word.getAllWords(function (res) {
+        callback(res);
+    });
+}
 
 server.listen(port, function () {
     console.log('SİSTEM:\t\t Server ' + port + ' numaralı portta çalışıyor');
