@@ -13,11 +13,13 @@ class room {
         this.gameInterval = null;
 
         this.gameStarted = false;
-        this.raundTime = 8;
-        this.currentTime = this.raundTime;
+        this.tourTime = 10;
+        this.currentTime = this.tourTime;
         this.maxRaund = 2;
         this.currentRaund = 0;
-        this.whoIsArtist = null;
+        this.currentQuestion = "saü";
+        this.maxArtist = 0;
+        this.currentArtist = 0;
         this.rightAnswerCount = 0;
         this.rewards = [
             250,    //1
@@ -29,24 +31,6 @@ class room {
             10,     //7
             5       //8
         ]
-    }
-
-    getStatus() {
-        var status = {
-            name: this.name,
-            capacity: this.capacity,
-            users: this.users,
-            gameStarted: this.gameStarted,
-            raundTime: this.raundTime,
-            currentTime: this.currentTime,
-            maxRaund: this.maxRaund,
-            currentRaund: this.currentRaund,
-            whoIsArtist: this.whoIsArtist,
-            rightAnswerCount: this.rightAnswerCount,
-            rewards: this.rewards
-        }
-
-        return status;
     }
 
     addUser(user) {
@@ -76,32 +60,52 @@ class room {
 
     /**** GAMEPLAY STUFF ****/
     startGame() {
-        if(this.isReadyForGame()) {
+        if (this.isReadyForGame() === "readyForNewGame") {
             console.log("|||||Yeni oyun başladı.");
             this.gameStarted = true;
             this.prepareGame();
             this.prepareRaund();
-            this.startRaund();
+            this.prepareTour();
+            this.startTour();
         }
     }
 
     prepareGame() {
         this.currentRaund = 0;
+
+        //Open db request.
+
+        //Set currentQuestion.
     }
 
     prepareRaund() {
-        console.log("|||||Yeni raund hazırlanıyor...");
-        this.currentTime = this.raundTime;
+        console.log("|||||Raund hazırlanıyor...");
+        this.currentArtist = this.users.length - 1;
+    }
 
-        //Find who is artist?
+    nextRaund() {
+        console.log("|||||Sonraki raunda geçiliyor...");
+        ++this.currentRaund;
+    }
+
+    prepareTour() {
+        console.log("|||||Tur hazırlanıyor...");
+        this.currentTime = this.tourTime;
+
+        //Set artist.
 
         //Emit the permission to artist.
 
         //Get random word from DB
-        
+
         //Emit the open word to artist.
-        
+
         //Emit the secret word to everyone.
+    }
+
+
+    isAllToursCompleted() {
+        return (this.currentArtist < 0) ? true : false;
     }
 
     endGame() {
@@ -112,67 +116,70 @@ class room {
     whileGame(roomMain) {
         roomMain.decreaseTimer(roomMain);
 
-        if (roomMain.isRaundFinished()) {
-            roomMain.stopRaund();
+        if (roomMain.isTourFinished()) {
+            roomMain.setNextArtist();
+            roomMain.stopTour();
 
-            if (roomMain.isGameFinished()) {
-                roomMain.endGame();
-                
-                console.log("|||||Yeni oyun 10 saniye sonra başlayacak...");
-                roomMain.waitALittle(10000, function() {
-                    roomMain.startGame();
-                });
+            if (roomMain.isAllToursCompleted()) {
+                roomMain.nextRaund();
+
+                if (roomMain.isGameFinished()) {
+                    roomMain.endGame();
+
+                    console.log("|||||Yeni oyun 5 saniye sonra başlayacak...");
+                    roomMain.waitALittle(5000, function () {
+                        roomMain.startGame();
+                    });
+                } else {
+                    roomMain.prepareRaund();
+                }
             } else {
-                roomMain.prepareRaund();
-
-                console.log("|||||Yeni raund 5 saniye sonra başlayacak...");
-                roomMain.waitALittle(5000, function() {
-                    roomMain.nextRaund();
-                });
+                roomMain.prepareTour();
+                roomMain.startTour();
             }
         }
     }
 
     decreaseTimer(roomMain) {
-        console.log("||||||Raundun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
+        console.log("||||||Turun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
         // console.log("~~~Kullanıcılara currentTime bildiriliyor.");
         // roomMain.io.to(roomMain.name).emit('currentTime', roomMain.currentTime);
     }
 
-    stopRaund() {
-        console.log("|||||Raund bitti: " + this.currentRaund + "/" + this.maxRaund);
+    stopTour() {
+        console.log("|||||Tur bitti");
+        // Seçilen kelime şuydu bunlar bildi şunlar bilemedi emit le.
         clearInterval(this.gameInterval);
     }
 
-    isRaundFinished() {
-        return (this.currentTime <= 0) ? true : false; 
+    isTourFinished() {
+        return (this.currentTime <= 0) ? true : false;
     }
-    
-    startRaund() {
-        console.log("|||||Raund başlatılıyor...");
-        this.nextRaund();
+
+    isAllToursFinished() {
+        return (this.currentArtist < 0) ? true : false;
     }
-    
-    nextRaund() {
-        this.currentRaund++;
-        console.log("|||||Yeni raund başladı: " + this.currentRaund + "/" + this.maxRaund);
+
+    startTour() {
+        console.log("|||||Tur başlatılıyor...");
+        console.log("|||||Yeni tur başladı: " + "Artist:" + this.users[this.currentArtist].name + " | Kelime: " + this.currentQuestion);
         this.gameInterval = setInterval(this.whileGame, 1000, this);
     }
 
     isReadyForGame() {
         if (this.getUserCount() <= 1) {
-            console.log("|||||ODA DURUM:\t\t Yeni oyun için yeterli oyuncu yok.");
-            return false;
+            //Yeni oyun için yeterli oyuncu yok.
+            return "notEnoughUser";
         }
         else if (this.isGameStarted()) {
-            console.log("|||||ODA DURUM:\t\t Yeni oyuna hazır değil: oyun zaten oynanıyor.");
-            return false;
+            //Yeni oyuna hazır değil: oyun zaten oynanıyor.
+            return "alreadyPlaying";
         } else if (this.getUserCount() > 1 && this.isGameStarted() == false) {
-            console.log("|||||ODA DURUM:\t\t Oda yeni bir oyuna hazır.");
-            return true;
+            //Oda yeni bir oyuna hazır.
+            return "readyForNewGame";
         } else {
-            console.log("|||||ODA DURUM:\t\t Bir şeyler ters gidiyor.");
-            return false;
+            //Bir şeyler ters gidiyor.
+            return "ERROR";
         }
     }
 
@@ -183,9 +190,13 @@ class room {
     isGameFinished() {
         return (this.currentRaund >= this.maxRaund) ? true : false;
     }
-    
+
     waitALittle(milliseconds, callback) {
         setTimeout(callback, milliseconds);
+    }
+
+    setNextArtist() {
+        this.currentArtist--;
     }
 }
 

@@ -67,9 +67,9 @@ io.on('connection', function (socket) {
         userManager.removeUser(user);
         roomManager.removeUser(user, room);
         
-        if (room.isReadyForGame() == false) {
+        if (room.isReadyForGame() == "notEnoughUser") {
             console.log("UYARI:\t\t Oynanan oyun yeterli oyuncu olmadığından durdurulmak zorunda!");
-            room.stopRaund();
+            room.stopTour();
             room.endGame();
         }
 
