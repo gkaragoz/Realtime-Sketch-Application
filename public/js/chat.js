@@ -56,6 +56,13 @@ function updateUsers(users) {
             ol.append(jQuery('<li></li>').text(user.name + "\t" + user.score + "\tÇİZER"));
         } else {
             ol.append(jQuery('<li></li>').text(user.name + "\t" + user.score));
+            if (user.isGuessed) {
+                console.log("Arkplan yeşil.");
+                // $('#1').css('background-color', '#7CFF70');
+            } else {
+                console.log("Reset arkaplan.");
+                // $('#1').css('background-color', '#E1E1E1');
+            }
         }
     });
 

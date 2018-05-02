@@ -4,6 +4,7 @@
         this.name = name;
         this.score = 0;
         this.isArtist = false;
+        this.isGuessed = false;
     }
 
     getSocketId() {
@@ -36,6 +37,14 @@
 
     setArtist(value){
       this.isArtist = value;
+    }
+
+    getIsGuessed() {
+      return this.isGuessed;
+    }
+
+    setIsGuessed(value) {
+      this.isGuessed = value;
     }
   }
   

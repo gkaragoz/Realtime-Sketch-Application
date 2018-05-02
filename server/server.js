@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
             } else {
                 io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
             }
-            console.log("BAŞARILI:\t\t Mesaj gönderildi: " + JSON.stringify(generateMessage(user.name, message.text), '', 2) + "\n");
+            console.log("BAŞARILI:\t\t Mesaj gönderildi.");
         } else {
             console.log("BAŞARISIZ:\t\t Mesaj gönderilemedi.");
         }

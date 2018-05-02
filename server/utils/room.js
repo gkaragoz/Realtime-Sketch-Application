@@ -23,16 +23,7 @@ class room {
         this.maxArtist = 0;
         this.currentArtist = 0;
         this.rightAnswerCount = 0;
-        this.rewards = [
-            250,    //1
-            200,    //2
-            150,    //3
-            100,    //4
-            50,     //5
-            25,     //6
-            10,     //7
-            5       //8
-        ]
+        this.rewardScoreMultiplier = 50;
     }
 
     addUser(user) {
@@ -94,6 +85,8 @@ class room {
 
         this.currentQuestion = this.getARandomWord();
         console.log("|||||Bu tur için kullanılacak kelime belirlendi: " + this.currentQuestion);
+
+        this.cleanAllUserGuesses();
 
         //Set artist.
         this.onOffEveryArtist();
@@ -229,12 +222,27 @@ class room {
     }
 
     isGuessCorrect(user, word) {
-        if (word === this.currentQuestion && user.isArtist === false) {
+        if (word === this.currentQuestion && 
+            user.isArtist === false && 
+            user.getIsGuessed() === false) {
+
             console.log("***" + user.name + " adlı kullanıcı kelimeyi doğru tahmin etti: " + word);
-            //puan ver.
+
+            var score = word.length * this.rewardScoreMultiplier;
+            user.addScore(score);
+            user.setIsGuessed(true);
+
+            this.io.to(this.name).emit('updateUserList', this.users);
             return true;
         } else {
             return false;
+        }
+    }
+
+    cleanAllUserGuesses() {
+        for (let ii = 0; ii < this.users.length; ii++) {
+            const user = this.users[ii];
+            user.setIsGuessed(false);
         }
     }
 
