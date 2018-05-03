@@ -113,6 +113,7 @@ socket.on('onGameStarted', function(data){
       setArtist(user.isArtist);
     }
   }
+  
   updateQuestionText(data.word, isArtist);
   updateUsers(users);
 });

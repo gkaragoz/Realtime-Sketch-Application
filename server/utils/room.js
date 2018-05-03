@@ -113,6 +113,7 @@ class room {
 
     whileGame(roomMain) {
         roomMain.decreaseTimer(roomMain);
+        roomMain.announceTheGame(roomMain);
 
         if (roomMain.isTourFinished()) {
             roomMain.setNextArtist();
@@ -140,13 +141,6 @@ class room {
 
     decreaseTimer(roomMain) {
         console.log("||||||Turun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
-
-        var data = {
-            currentRaund: roomMain.currentRaund, 
-            maxRaund: roomMain.maxRaund, 
-            tourTime: roomMain.currentTime
-        }
-        roomMain.io.to(roomMain.name).emit('roomInfo', data);
     }
 
     stopTour() {
@@ -252,9 +246,14 @@ class room {
         var data = {
             users: this.users,
             word : this.currentQuestion,
+            currentRaund: this.currentRaund, 
+            maxRaund: this.maxRaund, 
+            tourTime: this.currentTime
         };
-        console.log("~~~Kullanıcılara startGame bildiriliyor.");
+
+        console.log("~~~Kullanıcılara onGameStarted ve roomInfo bildiriliyor.");
         this.io.to(this.name).emit('onGameStarted', data);
+        this.io.to(this.name).emit('roomInfo', data);
     }
     
     onTourStarted() {
