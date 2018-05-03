@@ -53,9 +53,9 @@ io.on('connection', function (socket) {
                     io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
                 
                     //socket.emit from Admin text Welcome to the chat app
-                    socket.emit('newMessage', generateMessage('Admin','Hoşgeldiniz'));
+                    socket.emit('newMessage', generateMessage('Sistem','Hoşgeldiniz'));
                     //socket.broadcast.emit from Admin text New user joined
-                    socket.broadcast.to(room.name).emit('newMessage', generateMessage('Admin',  user.name + ' bağlandı.'));
+                    socket.broadcast.to(room.name).emit('newMessage', generateMessage('Sistem',  user.name + ' bağlandı.'));
                     
                     callback();
                 });
@@ -70,7 +70,7 @@ io.on('connection', function (socket) {
         if (user && isRealString(message.text)) {
             if (room.isGuessCorrect(user, message.text.toUpperCase())) {
                 message.text = user.name.toUpperCase() + " ARANAN KELİMEYİ BİLDİ!";
-                io.to(room.name).emit('newMessage', generateMessage("Admin", message.text));
+                io.to(room.name).emit('newMessage', generateMessage("Sistem", message.text));
             } else {
                 io.to(room.name).emit('newMessage', generateMessage(user.name, message.text));
             }
@@ -99,7 +99,7 @@ io.on('connection', function (socket) {
         room.controlItself();
 
         io.to(room.name).emit('updateUserList', roomManager.getUsers(room));
-        io.to(room.name).emit('newMessage', generateMessage('Admin', user.name + " ayrıldı." ));
+        io.to(room.name).emit('newMessage', generateMessage('Sistem', user.name + " ayrıldı." ));
 
         var totalUserCount = userManager.getUserCount();
         if (totalUserCount === 0) {

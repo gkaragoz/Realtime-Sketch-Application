@@ -35,6 +35,8 @@ function setup() {
     y: 0,
     color: pencil.color
   };
+
+  $('#toolbox_div').hide();
 }
 
 function draw() {
