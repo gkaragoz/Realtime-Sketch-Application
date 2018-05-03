@@ -247,3 +247,8 @@
                                     supported by Chrome and Opera */
   }
  
+  #questionText{
+      position: relative;
+      float:left;
+      left: 37,5%;
+  }
