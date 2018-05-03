@@ -65,6 +65,7 @@ class room {
 
     prepareGame() {
         this.currentRaund = 1;
+        this.clearallUsersScores();
     }
 
     prepareRaund() {
@@ -253,6 +254,13 @@ class room {
         for (let ii = 0; ii < this.users.length; ii++) {
             const user = this.users[ii];
             user.setIsGuessed(false);
+        }
+    }
+
+    clearallUsersScores() {
+        for (let ii = 0; ii < this.users.length; ii++) {
+            const user = this.users[ii];
+            user.resetScore();
         }
     }
 
