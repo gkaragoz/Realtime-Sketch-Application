@@ -118,3 +118,7 @@ socket.on('onGameStarted', function(data){
 socket.on('roomInfo', function(data){
   updateRoomInfo(data.currentRaund, data.maxRaund, data.tourTime);
 });
+
+socket.on('onTourFinished', function(){
+ background(255);
+});

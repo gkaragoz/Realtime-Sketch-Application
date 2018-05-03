@@ -151,7 +151,8 @@ class room {
 
     stopTour() {
         console.log("|||||Tur bitti");
-        // Seçilen kelime şuydu bunlar bildi şunlar bilemedi emit le.
+        this.onTourFinished();
+
         clearInterval(this.gameInterval);
     }
 
@@ -267,13 +268,13 @@ class room {
     }
 
     getARandomWord() {
-        var randomIndex = Math.floor((Math.random() * this.words.length));
-        var word = this.words[randomIndex];
-
-        if (word === undefined)
-            return "sakarya";
-        else 
+        try {
+            var randomIndex = Math.floor((Math.random() * this.words.length));
+            var word = this.words[randomIndex];
             return word;
+        } catch (error) {
+            return "sakarya";
+        }
     }
 }
 
