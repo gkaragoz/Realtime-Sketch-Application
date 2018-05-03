@@ -1,16 +1,15 @@
 {
-  "name": "chatroomapplication",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "realtime-chat-application",
+  "version": "4.2.5",
+  "description": "Graduation thesis.",
+  "main": "server/server.js",
   "scripts": {
-    "start": "nodemon server/server.js",
-    "test": "mocha server/**/*.test.js",
-    "test-watch": " nodemon --exec 'npm test' "
+    "start": "node server/server.js",
+    "test": "mocha server/**/*.test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oguzhanaydemir/chatroomapplication.git"
+    "url": "https://github.com/gkaragoz/Realtime-Sketch-Application"
   },
   "engines": {
     "node": "6.2.2"
@@ -18,9 +17,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oguzhanaydemir/chatroomapplication/issues"
+    "url": "https://github.com/gkaragoz/Realtime-Sketch-Application/issues"
   },
-  "homepage": "https://github.com/oguzhanaydemir/chatroomapplication#readme",
+  "homepage": "https://github.com/gkaragoz/Realtime-Sketch-Application#readme",
   "dependencies": {
     "express": "^4.16.1",
     "moment": "^2.15.1",
