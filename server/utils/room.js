@@ -112,10 +112,10 @@ class room {
     }
 
     whileGame(roomMain) {
-        roomMain.decreaseTimer(roomMain);
-        roomMain.announceTheGame(roomMain);
+        roomMain.decreaseTimer();
+        roomMain.announceTheGame();
 
-        if (roomMain.isTourFinished()) {
+        if (roomMain.isTourFinished() || roomMain.isEveryOneGuessed()) {
             roomMain.setNextArtist();
             roomMain.stopTour();
 
@@ -139,8 +139,8 @@ class room {
         }
     }
 
-    decreaseTimer(roomMain) {
-        console.log("||||||Turun bitmesine " + roomMain.currentTime-- + " saniye kaldı.");
+    decreaseTimer() {
+        console.log("||||||Turun bitmesine " + this.currentTime-- + " saniye kaldı.");
     }
 
     stopTour() {
@@ -188,6 +188,21 @@ class room {
 
     isGameFinished() {
         return (this.currentRaund > this.maxRaund) ? true : false;
+    }
+
+    isEveryOneGuessed() {
+        var isIt = true;
+        for (let ii = 0; ii < this.users.length; ii++) {
+            const user = this.users[ii];
+            if (user.getIsArtist()) {
+                continue;
+            }
+            if (user.getIsGuessed() === false) {
+                isIt = false;
+            }
+        }
+
+        return isIt;
     }
 
     waitALittle(milliseconds, callback) {
