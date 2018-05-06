@@ -6,8 +6,8 @@ const userManager =require('./userManager').userManager;
       this.rooms = [];
     }
 
-    createRoom(io) {
-        var room = new roomModel(io);
+    createRoom(io, words) {
+        var room = new roomModel(io, words);
         this.rooms.push(room);
         
         console.log("BAŞARILI:\t\t Bir oda oluşuturuldu: " + room.name);
@@ -37,7 +37,7 @@ const userManager =require('./userManager').userManager;
         return null;
     }
 
-    getAvailableRoom(io) {
+    getAvailableRoom(io, words) {
         for (let ii = 0; ii < this.rooms.length; ii++) {
             const room = this.rooms[ii];
             if (room.isAvailableForNewUser()) {
@@ -47,11 +47,11 @@ const userManager =require('./userManager').userManager;
         }
 
         console.log("SİSTEM:\t\t Uygun bir oda bulunamadı!");
-        return this.createRoom(io);
+        return this.createRoom(io, words);
     }
 
-    InitializeRoom(io, user, callback) {
-        var room = this.getAvailableRoom(io);
+    InitializeRoom(io, words, user, callback) {
+        var room = this.getAvailableRoom(io, words);
         room.addUser(user);
         console.log("SİSTEM:\t\t Bir kullanıcı odaya bağlandı: " + user.name);
 

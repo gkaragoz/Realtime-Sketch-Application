@@ -3,25 +3,27 @@ var colorButtonsCount = 4;
 var colorButtonsOffsetX = 25;
 var colorObj;
 var drawPackage;
-
+var isArtist = false;
 var DEBUG_MODE = false;
 
 const DRAW_MAIN_ID = 'draw_main';
+const TOOLBOX_ID = "toolbox_div";
 
 function setup() {
-  var canvas = createCanvas(885, windowHeight);
+  var canvas = createCanvas(600, 700);
   colorObj = new Color();
 
-  background(0);
+  background(255);
   colorMode(RGB);
   canvas.parent(DRAW_MAIN_ID);
 
   createButtonUIs();
 
   var checkbox = createCheckbox('Debug Mode', false);
-  checkbox.parent(DRAW_MAIN_ID);
+  checkbox.parent(TOOLBOX_ID);
   checkbox.position(150, windowHeight - 50);
   checkbox.changed(onChangedCheckbox);
+  checkbox.addClass('noselect');
 
   //Create a new Instance of pencil
   pencil = new pencil(colorObj);
@@ -33,6 +35,8 @@ function setup() {
     y: 0,
     color: pencil.color
   };
+
+  $('#toolbox_div').hide();
 }
 
 function draw() {
@@ -47,21 +51,25 @@ socket.on('draw', function (data) {
 
 //This is because user may want to click and draw without dragging. Ex: eyes
 function mousePressed() {
-  drawPackage.x = mouseX;
-  drawPackage.y = mouseY;
-
-  socket.emit('draw', drawPackage, function (response) {
-    pencil.paint(response);
-  });
+  if(isArtist){
+    drawPackage.x = mouseX;
+    drawPackage.y = mouseY;
+  
+    socket.emit('draw', drawPackage, function (response) {
+      pencil.paint(response);
+    });
+  }
 }
 
 function mouseDragged() {
-  drawPackage.x = mouseX;
-  drawPackage.y = mouseY;
-  
-  socket.emit('draw', drawPackage, function (response) {
-    pencil.paint(response);
-  });
+  if(isArtist){
+    drawPackage.x = mouseX;
+    drawPackage.y = mouseY;
+    
+    socket.emit('draw', drawPackage, function (response) {
+      pencil.paint(response);
+    });
+  }
 }
 
 function createButtonUIs() {
@@ -74,7 +82,7 @@ function createButtonUIs() {
     var button = new Button(
       "",
       this.colorObj.index[i],
-      DRAW_MAIN_ID,
+      TOOLBOX_ID,
       location
     );
   }
@@ -84,3 +92,36 @@ function onChangedCheckbox() {
   DEBUG_MODE = !DEBUG_MODE;
   console.log("DEBUG MODE: " + DEBUG_MODE);
 }
+
+function setArtist(value) {
+  isArtist = value;
+
+  if (isArtist) {
+    $('#toolbox_div').show();
+  } else {
+    $('#toolbox_div').hide();
+  }
+}
+
+socket.on('onGameStarted', function(data){
+  var users = data.users;
+  
+  for (let ii = 0; ii < users.length; ii++) {
+    const user = users[ii];
+    
+    if (socket.id === user.socketId) {
+      setArtist(user.isArtist);
+    }
+  }
+  
+  updateQuestionText(data.word, isArtist);
+  updateUsers(users);
+});
+
+socket.on('roomInfo', function(data){
+  updateRoomInfo(data.currentRaund, data.maxRaund, data.tourTime);
+});
+
+socket.on('onTourFinished', function(){
+ background(255);
+});

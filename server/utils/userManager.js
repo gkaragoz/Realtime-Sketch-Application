@@ -20,12 +20,10 @@ class userManager {
     }
 
     getUser (socketId) {
-      console.log("İŞLEM:\t\t Kullanıcı aranıyor: " + socketId);
       for (let ii = 0; ii < this.users.length; ii++) {
         const searching = this.users[ii];
 
         if (searching.socketId === socketId) {
-          console.log("BAŞARILI:\t\t Aranan kullanıcı bulundu: " + searching.name);
           return searching;
         }
       }

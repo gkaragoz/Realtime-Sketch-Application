@@ -32,13 +32,7 @@ socket.on('disconnect', function () {
 });
 
 socket.on('updateUserList', function (users) {
-    var ol = jQuery('<ol></ol>');
-
-    users.forEach(function (user) {
-        ol.append(jQuery('<li></li>').text(user.name));
-    });
-
-    jQuery('#users').html(ol);
+    updateUsers(users);
 });
 
 socket.on('newMessage', function (message) {
@@ -53,6 +47,43 @@ socket.on('newMessage', function (message) {
     jQuery('#messages').append(html);
     scrollToBottom();
 });
+
+function updateUsers(users) {
+    var ol = jQuery('<ol></ol>');
+   
+    users.forEach(function (user) {
+        if (user.isArtist) {
+            ol.append(jQuery('<li></li>').text(user.name + "\t" + user.score + "\tÇİZER"));
+        } else {
+            ol.append(jQuery('<li></li>').text(user.name + "\t" + user.score));
+            if (user.isGuessed) {
+                console.log("Arkplan yeşil.");
+                // $('#1').css('background-color', '#7CFF70');
+            } else {
+                console.log("Reset arkaplan.");
+                // $('#1').css('background-color', '#E1E1E1');
+            }
+        }
+    });
+
+    jQuery('#users').html(ol);
+}
+
+function updateRoomInfo(currentRaund, maxRaund, tourTime) {
+    $('#roomInfo').html("Raund: " + currentRaund + "/" + maxRaund + " | " + tourTime + " saniye");
+}
+
+function updateQuestionText(question, isArtist) {
+    if (isArtist) {
+        $('#questionText').html(question);
+    } else {
+        var value = "";
+        for (let ii = 0; ii < question.length; ii++) {
+            value += "_ ";
+        }
+        $('#questionText').html(value);
+    }
+}
 
 jQuery('#message-form').on('submit', function (e) {
     e.preventDefault();

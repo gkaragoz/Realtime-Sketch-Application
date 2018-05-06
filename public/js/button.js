@@ -7,6 +7,7 @@ class Button {
         this.button.parent(parent);
         this.button.position(location.posX, location.posY);
         this.button.mousePressed(() => {
+            console.log("BUTONA TIKLAMA YETENEĞİ VERDİM!");
             this.onClick();
         });
         this.setBackgroundColor(color);
@@ -17,6 +18,7 @@ class Button {
     }
 
     onClick() {
+        console.log("İNATLA BUTONA TIKLIYORUM.");
         pencil.setDrawColor(this.color);
     }
 }

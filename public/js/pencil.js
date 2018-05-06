@@ -1,6 +1,6 @@
 //Real job is here. Painting with lerps
 function pencil(colorObj) {
-  this.color = colorObj.colors.WHITE;
+  this.color = colorObj.colors.BLACK;
 
   this.paint = function(data) {
     noStroke();
@@ -16,7 +16,7 @@ function pencil(colorObj) {
         if(DEBUG_MODE)
         {
           //Make it colorful, otherwise its white
-          fill(255, 255*ii/distance, 255);
+          fill(0, 255*ii/distance, 0);
           ellipse(data.x, data.y, 20, 20);
         }
         else
