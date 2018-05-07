@@ -295,7 +295,7 @@ class room {
             var word = this.words[randomIndex];
             return word;
         } catch (error) {
-            return "sakarya";
+            return "SAKARYA";
         }
     }
 }
