@@ -15,7 +15,7 @@ class room {
 
         this.gameStarted = false;
         this.currentTour = 0;
-        this.tourTime = 30;
+        this.tourTime = 60;
         this.currentTime = this.tourTime;
         this.maxRaund = 3;
         this.currentRaund = 0;
@@ -91,12 +91,6 @@ class room {
 
         //Set artist.
         this.onOffEveryArtist();
-
-        //Emit the permission to artist.
-
-        //Get random word from DB
-
-        //Emit the open word to artist.
 
         //Emit the secret word to everyone.
         this.announceTheGame();
@@ -290,13 +284,18 @@ class room {
     }
 
     getARandomWord() {
+        var word = "";
         try {
             var randomIndex = Math.floor((Math.random() * this.words.length));
-            var word = this.words[randomIndex];
-            return word;
+            word = this.words[randomIndex];
         } catch (error) {
-            return "sakarya";
+            console.log("Kelime bulunamadı");
+            word = "sakarya";
         }
+        if (word === undefined) 
+            word = "sakarya";
+
+        return word;
     }
 }
 
