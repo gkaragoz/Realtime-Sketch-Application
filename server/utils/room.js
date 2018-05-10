@@ -290,10 +290,10 @@ class room {
             word = this.words[randomIndex];
         } catch (error) {
             console.log("Kelime bulunamadı");
-            word = "sakarya";
+            word = "SAKARYA";
         }
         if (word === undefined) 
-            word = "sakarya";
+            word = "SAKARYA";
 
         return word;
     }
